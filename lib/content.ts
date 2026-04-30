@@ -58,6 +58,14 @@ export const projects: {
     repo: 'https://github.com/BSinghOP/bank-management-system',
   },
   {
+    title: 'AyuTrace — Ethicons (team)',
+    subtitle:
+      'Hackathon build with team Ethicons. Blockchain traceability platform for Ayurvedic herbs — Solidity smart contracts on EVM, geo-tagged origin records, immutable quality certifications, and consumer QR codes linking to the full farm-to-formulation history. Contributor, not sole author.',
+    tags: ['Next.js', 'Solidity', 'Ethers.js', 'MongoDB', 'Hackathon'],
+    live: 'https://ethicons.vercel.app',
+    repo: 'https://github.com/BSinghOP/ethicons-ayutrace',
+  },
+  {
     title: 'Minecraft modded content',
     subtitle:
       'Modded Minecraft gameplay and showcases — modpack playthroughs, custom mod features, and progression runs.',

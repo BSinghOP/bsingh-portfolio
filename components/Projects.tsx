@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box } from 'lucide-react';
+import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box, Trophy } from 'lucide-react';
 import {
   SiOpenjdk,
   SiReact,
@@ -12,6 +12,10 @@ import {
   SiPm2,
   SiCloudflare,
   SiCurseforge,
+  SiNextdotjs,
+  SiSolidity,
+  SiEthereum,
+  SiMongodb,
 } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 import { projects } from '@/lib/content';
@@ -31,6 +35,11 @@ const TAG_ICONS: Record<string, TagIcon> = {
   Modded: { Icon: Wrench, color: '#D29922' },
   Modpacks: { Icon: SiCurseforge, color: '#F16436' },
   Gameplay: { Icon: Gamepad2, color: '#A371F7' },
+  'Next.js': { Icon: SiNextdotjs, color: 'currentColor' },
+  Solidity: { Icon: SiSolidity, color: 'currentColor' },
+  'Ethers.js': { Icon: SiEthereum, color: '#627EEA' },
+  MongoDB: { Icon: SiMongodb, color: '#47A248' },
+  Hackathon: { Icon: Trophy, color: '#E3B341' },
 };
 const FALLBACK_TAG_ICON: TagIcon = { Icon: Package, color: '#8B949E' };
 
