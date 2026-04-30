@@ -1,0 +1,60 @@
+// Contact form endpoint. Uses Resend if RESEND_API_KEY is set, otherwise just logs.
+// Get a key at https://resend.com (free tier: 3000 emails/month, 100/day).
+//
+// Required env vars on the VPS:
+//   RESEND_API_KEY=re_xxx
+//   CONTACT_TO=hello@bsingh.codes
+//   CONTACT_FROM="BSingh Portfolio <noreply@bsingh.codes>"   (must be a verified domain in Resend)
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(req: NextRequest) {
+  try {
+    const { name, email, message } = await req.json();
+
+    if (!name || !email || !message) {
+      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
+    }
+    if (message.length > 5000) {
+      return NextResponse.json({ error: 'Message too long' }, { status: 400 });
+    }
+
+    const apiKey = process.env.RESEND_API_KEY;
+    const to = process.env.CONTACT_TO || 'hello@bsingh.codes';
+    const from = process.env.CONTACT_FROM || 'noreply@bsingh.codes';
+
+    if (!apiKey) {
+      console.log('[contact form — no Resend key set]', { name, email, message });
+      return NextResponse.json({ ok: true, dev: true });
+    }
+
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to,
+        reply_to: email,
+        subject: `Portfolio contact from ${name}`,
+        text: `From: ${name} <${email}>\n\n${message}`,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('Resend error:', err);
+      return NextResponse.json({ error: 'Send failed' }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
