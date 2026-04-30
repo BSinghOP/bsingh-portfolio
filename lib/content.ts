@@ -1,20 +1,18 @@
-// All site content lives here. Edit this file to update the portfolio.
-
 export const personal = {
   name: 'Bibekpreet Singh Chugh',
   shortName: 'BSingh',
   email: 'hello@bsingh.codes',
   github: 'https://github.com/BSinghOP',
   githubUsername: 'BSinghOP',
-  linkedin: '#', // TODO: update once LinkedIn is set up
-  ytJobs: 'https://ytjobs.co/talent/profile/124595',
+  linkedin: '#',
+  ytJobs: 'https://ytjobs.co/@BSingh',
   domain: 'bsingh.codes',
   resume: '/resume.pdf',
 };
 
 export const hero = {
   title: ['Building things.', 'Breaking servers.', 'Figuring it out.'],
-  accentLine: 1, // index of the line that gets the accent color (0-based)
+  accentLine: 1,
   subtitle:
     'CS undergrad at SRM Delhi-NCR. I build personal projects across the stack and run game-server infrastructure that has handled 1000+ concurrent players. Comfortable in code, calmer in front of a working deploy.',
 };
@@ -32,7 +30,25 @@ export const stats = [
   { label: 'concurrent peak', value: '1000+', hint: 'minecraft infra' },
 ];
 
-export const projects = [
+export const projects: {
+  title: string;
+  subtitle: string;
+  tags: string[];
+  image?: string;
+  imageAlt?: string;
+  live?: string;
+  store?: string;
+  repo?: string;
+  soon?: boolean;
+}[] = [
+  {
+    title: 'Minecraft Server Infrastructure',
+    subtitle:
+      'Multi-region Minecraft network. 1000+ concurrent peak. Cloudflare Spectrum DDoS mitigation, dedicated bare-metal hosts, custom plugin stack.',
+    tags: ['DevOps', 'Linux', 'Cloudflare', 'Java'],
+    live: 'https://battlepie.net',
+    store: 'https://store.battlepie.net',
+  },
   {
     title: "BSingh's Vault",
     subtitle:
@@ -40,29 +56,20 @@ export const projects = [
     tags: ['React', 'Node.js', 'MySQL', 'Nginx', 'PM2'],
     live: 'https://dbms.bsingh.codes',
     repo: 'https://github.com/BSinghOP/bank-management-system',
-    accent: 'blue' as const,
   },
   {
-    title: 'Minecraft Server Infrastructure',
+    title: 'Minecraft modded content',
     subtitle:
-      'Multi-region Minecraft network. 1000+ concurrent peak. Cloudflare Spectrum DDoS mitigation, dedicated bare-metal hosts, custom plugin stack.',
-    tags: ['DevOps', 'Linux', 'Cloudflare', 'Java'],
-    accent: 'green' as const,
-  },
-  {
-    title: 'YouTube editor work',
-    subtitle:
-      'Freelance video editing and channel work — see the YT Jobs profile for details and references.',
-    tags: ['Video', 'Premiere Pro', 'After Effects'],
-    live: 'https://ytjobs.co/talent/profile/124595',
-    accent: 'amber' as const,
+      'Modded Minecraft gameplay and showcases — modpack playthroughs, custom mod features, and progression runs.',
+    tags: ['Minecraft', 'Modded', 'Modpacks', 'Gameplay'],
+    live: 'https://ytjobs.co/@BSingh',
   },
   {
     title: 'More coming.',
     subtitle:
       'Currently figuring out the next build. Probably something with realtime, probably something I will regret deploying on a Friday.',
-    tags: ['soon'],
-    accent: 'amber' as const,
+    tags: [],
+    soon: true,
   },
 ];
 
