@@ -37,9 +37,17 @@ function ContributionGrid() {
           grid-auto-rows: 12px;
           gap: 3px;
           padding: 1rem 1.2rem;
-          border: 1px solid var(--line);
-          border-radius: 10px;
-          background: var(--card);
+          border: 1px solid var(--line-strong);
+          border-radius: 12px;
+          background:
+            linear-gradient(180deg, var(--card-grad-top) 0%, var(--card-grad-bot) 100%),
+            var(--card);
+          box-shadow:
+            inset 0 1px 0 var(--card-edge-top),
+            inset 0 -1px 0 var(--card-edge-bot),
+            0 2px 4px rgba(0, 0, 0, 0.2),
+            0 8px 16px rgba(0, 0, 0, 0.25),
+            0 22px 40px -14px rgba(0, 0, 0, 0.5);
         }
         :global(.contrib__cell) {
           border-radius: 2px;
@@ -91,7 +99,6 @@ export function Stats() {
       .catch(() => {});
   }, []);
 
-  // Merge live data into the stats array — first stat = repos (live)
   const liveStats = [...fallbackStats];
   if (gh.repos !== null) {
     liveStats[0] = { ...liveStats[0], value: String(gh.repos) };
@@ -112,13 +119,12 @@ export function Stats() {
         className="mono"
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           alignItems: 'center',
           marginBottom: '1.4rem',
           fontSize: 12,
         }}
       >
-        <span style={{ color: 'var(--fg-dim)' }}>// activity</span>
         <span
           style={{
             color: 'var(--green)',
@@ -159,10 +165,18 @@ export function Stats() {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
           gap: 0;
-          border: 1px solid var(--line);
-          border-radius: 10px;
-          background: var(--card);
+          border: 1px solid var(--line-strong);
+          border-radius: 12px;
+          background:
+            linear-gradient(180deg, var(--card-grad-top) 0%, var(--card-grad-bot) 100%),
+            var(--card);
           overflow: hidden;
+          box-shadow:
+            inset 0 1px 0 var(--card-edge-top),
+            inset 0 -1px 0 var(--card-edge-bot),
+            0 2px 4px rgba(0, 0, 0, 0.2),
+            0 8px 16px rgba(0, 0, 0, 0.25),
+            0 22px 40px -14px rgba(0, 0, 0, 0.5);
         }
         .stat {
           padding: 1.2rem 1.4rem;

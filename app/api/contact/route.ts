@@ -1,11 +1,3 @@
-// Contact form endpoint. Uses Resend if RESEND_API_KEY is set, otherwise just logs.
-// Get a key at https://resend.com (free tier: 3000 emails/month, 100/day).
-//
-// Required env vars on the VPS:
-//   RESEND_API_KEY=re_xxx
-//   CONTACT_TO=hello@bsingh.codes
-//   CONTACT_FROM="BSingh Portfolio <noreply@bsingh.codes>"   (must be a verified domain in Resend)
-
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {

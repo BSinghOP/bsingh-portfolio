@@ -9,8 +9,6 @@ const jetbrains = JetBrains_Mono({
   display: 'swap',
 });
 
-// Inter as the body font — clean, neutral, free, ships with next/font.
-// (Originally planned Geist, but Geist needs the separate `geist` package.)
 const geist = Inter({
   subsets: ['latin'],
   variable: '--font-geist',
