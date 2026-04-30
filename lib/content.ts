@@ -60,7 +60,7 @@ export const projects: {
   {
     title: 'AyuTrace — Ethicons (team)',
     subtitle:
-      'Hackathon build with team Ethicons. Blockchain traceability platform for Ayurvedic herbs — Solidity smart contracts on EVM, geo-tagged origin records, immutable quality certifications, and consumer QR codes linking to the full farm-to-formulation history. Contributor, not sole author.',
+      'Team build with Ethicons. Blockchain traceability for Ayurvedic herbs — Solidity contracts, MongoDB, and consumer QR codes for farm-to-formulation history. Contributor, not sole author.',
     tags: ['Next.js', 'Solidity', 'Ethers.js', 'MongoDB', 'Hackathon'],
     live: 'https://ethicons.vercel.app',
     repo: 'https://github.com/BSinghOP/ethicons-ayutrace',
