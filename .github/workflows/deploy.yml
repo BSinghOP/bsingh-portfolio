@@ -1,0 +1,36 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /var/www/bsingh-portfolio
+            echo "--- pulling latest ---"
+            git fetch --depth=1 origin main
+            git reset --hard origin/main
+            echo "--- installing deps ---"
+            npm ci
+            echo "--- building ---"
+            npm run build
+            echo "--- reloading pm2 ---"
+            pm2 reload bsingh-portfolio --update-env
+            pm2 save
+            echo "--- done ---"
