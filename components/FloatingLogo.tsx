@@ -7,11 +7,34 @@ import { Maximize2, X } from 'lucide-react';
 
 export function FloatingLogo() {
   const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   return (
     <>
+      <AnimatePresence>
+        {hovered && !open && (
+          <motion.div
+            className="floating-logo-bubble"
+            initial={{ opacity: 0, scale: 0.88, x: 10 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.9, x: 8 }}
+            transition={{ type: 'spring', stiffness: 360, damping: 26 }}
+            aria-hidden
+          >
+            <span className="floating-logo-bubble__text mono">
+              {`Hi! It's me BSingh — or you may know me as Bibek.`}
+            </span>
+            <span className="floating-logo-bubble__tail" aria-hidden />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.button
         onClick={() => setOpen(true)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
         aria-label="View logo"
         initial={{ opacity: 0, scale: 0.6, rotate: -10 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -73,6 +96,57 @@ export function FloatingLogo() {
       </AnimatePresence>
 
       <style jsx>{`
+        .floating-logo-bubble {
+          position: fixed;
+          top: 116px;
+          right: 150px;
+          max-width: 240px;
+          padding: 9px 13px;
+          border: 1px solid var(--line-strong);
+          border-radius: 12px;
+          background:
+            linear-gradient(180deg, var(--card-grad-top) 0%, var(--card-grad-bot) 100%),
+            var(--card-glass-thin);
+          -webkit-backdrop-filter: blur(20px) saturate(160%);
+          backdrop-filter: blur(20px) saturate(160%);
+          box-shadow:
+            inset 0 1px 0 var(--card-edge-top),
+            0 4px 14px rgba(0, 0, 0, 0.3),
+            0 12px 28px rgba(0, 0, 0, 0.35);
+          z-index: 21;
+          pointer-events: none;
+          transform-origin: 100% 50%;
+        }
+        :global(:root[data-theme='light']) .floating-logo-bubble {
+          box-shadow:
+            inset 0 1px 0 var(--card-edge-top),
+            0 2px 6px rgba(0, 0, 0, 0.08),
+            0 10px 24px rgba(0, 0, 0, 0.12);
+        }
+        .floating-logo-bubble__text {
+          display: block;
+          font-size: 12.5px;
+          line-height: 1.5;
+          color: var(--fg);
+          letter-spacing: -0.005em;
+        }
+        .floating-logo-bubble__tail {
+          position: absolute;
+          right: -6px;
+          top: 50%;
+          width: 11px;
+          height: 11px;
+          background: var(--card-glass-thin);
+          border-right: 1px solid var(--line-strong);
+          border-top: 1px solid var(--line-strong);
+          transform: translateY(-50%) rotate(45deg);
+        }
+        @media (max-width: 700px) {
+          .floating-logo-bubble {
+            display: none;
+          }
+        }
+
         .floating-logo {
           position: fixed;
           top: 90px;
