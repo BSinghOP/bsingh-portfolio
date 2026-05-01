@@ -113,7 +113,7 @@ export const achievements = [
   {
     title: 'Hackathon Participations',
     org: 'Various inter-college and online hackathons',
-    note: 'Multiple participations across student hackathons during undergraduate study.',
+    note: 'Multiple participations across student hackathons during undergraduate study. Recent: AyuTrace with team Ethicons — blockchain herb traceability.',
   },
   {
     title: 'Production Game Server Operations',
