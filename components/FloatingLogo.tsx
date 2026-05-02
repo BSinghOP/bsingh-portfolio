@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Maximize2, X } from 'lucide-react';
@@ -8,6 +8,24 @@ import { Maximize2, X } from 'lucide-react';
 export function FloatingLogo() {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+  }, []);
+
+  const showBubble = () => {
+    if (leaveTimer.current) {
+      clearTimeout(leaveTimer.current);
+      leaveTimer.current = null;
+    }
+    setHovered(true);
+  };
+  const scheduleHide = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    leaveTimer.current = setTimeout(() => setHovered(false), 350);
+  };
 
   return (
     <>
@@ -15,26 +33,45 @@ export function FloatingLogo() {
         {hovered && !open && (
           <motion.div
             className="floating-logo-bubble"
-            initial={{ opacity: 0, scale: 0.88, x: 10 }}
+            initial={{ opacity: 0, scale: 0.6, x: 18 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.9, x: 8 }}
-            transition={{ type: 'spring', stiffness: 360, damping: 26 }}
+            exit={{ opacity: 0, scale: 0.8, x: 12 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 22, mass: 0.9 }}
             aria-hidden
           >
+            <svg
+              className="floating-logo-bubble__cloud"
+              viewBox="0 0 280 110"
+              preserveAspectRatio="xMidYMid meet"
+              aria-hidden
+            >
+              <path
+                d="M 34 72
+                   C 10 72, 0 46, 28 36
+                   C 25 8, 65 -2, 92 18
+                   C 115 -8, 165 -8, 188 16
+                   C 218 -2, 256 4, 256 40
+                   L 256 56
+                   L 280 68
+                   L 256 78
+                   C 256 86, 240 92, 220 88
+                   C 180 92, 130 92, 85 86
+                   C 55 92, 8 82, 34 72 Z"
+              />
+            </svg>
             <span className="floating-logo-bubble__text mono">
               {`Hi! It's me BSingh — or you may know me as Bibek.`}
             </span>
-            <span className="floating-logo-bubble__tail" aria-hidden />
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.button
         onClick={() => setOpen(true)}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
+        onMouseEnter={showBubble}
+        onMouseLeave={scheduleHide}
+        onFocus={showBubble}
+        onBlur={scheduleHide}
         aria-label="View logo"
         initial={{ opacity: 0, scale: 0.6, rotate: -10 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -83,70 +120,33 @@ export function FloatingLogo() {
               onClick={(e) => e.stopPropagation()}
               className="logo-modal__inner"
             >
-              <Image
-                src="/logo.jpg"
-                alt="BSingh logo"
-                width={1200}
-                height={1200}
-                className="logo-modal__img"
-              />
+              {videoFailed ? (
+                <Image
+                  src="/logo.jpg"
+                  alt="BSingh logo"
+                  width={1200}
+                  height={1200}
+                  className="logo-modal__img"
+                />
+              ) : (
+                <video
+                  src="/logo.mp4"
+                  poster="/logo.jpg"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  onError={() => setVideoFailed(true)}
+                  className="logo-modal__video"
+                />
+              )}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
       <style jsx>{`
-        .floating-logo-bubble {
-          position: fixed;
-          top: 116px;
-          right: 150px;
-          max-width: 240px;
-          padding: 9px 13px;
-          border: 1px solid var(--line-strong);
-          border-radius: 12px;
-          background:
-            linear-gradient(180deg, var(--card-grad-top) 0%, var(--card-grad-bot) 100%),
-            var(--card-glass-thin);
-          -webkit-backdrop-filter: blur(20px) saturate(160%);
-          backdrop-filter: blur(20px) saturate(160%);
-          box-shadow:
-            inset 0 1px 0 var(--card-edge-top),
-            0 4px 14px rgba(0, 0, 0, 0.3),
-            0 12px 28px rgba(0, 0, 0, 0.35);
-          z-index: 21;
-          pointer-events: none;
-          transform-origin: 100% 50%;
-        }
-        :global(:root[data-theme='light']) .floating-logo-bubble {
-          box-shadow:
-            inset 0 1px 0 var(--card-edge-top),
-            0 2px 6px rgba(0, 0, 0, 0.08),
-            0 10px 24px rgba(0, 0, 0, 0.12);
-        }
-        .floating-logo-bubble__text {
-          display: block;
-          font-size: 12.5px;
-          line-height: 1.5;
-          color: var(--fg);
-          letter-spacing: -0.005em;
-        }
-        .floating-logo-bubble__tail {
-          position: absolute;
-          right: -6px;
-          top: 50%;
-          width: 11px;
-          height: 11px;
-          background: var(--card-glass-thin);
-          border-right: 1px solid var(--line-strong);
-          border-top: 1px solid var(--line-strong);
-          transform: translateY(-50%) rotate(45deg);
-        }
-        @media (max-width: 700px) {
-          .floating-logo-bubble {
-            display: none;
-          }
-        }
-
         .floating-logo {
           position: fixed;
           top: 90px;
