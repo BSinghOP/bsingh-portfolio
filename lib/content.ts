@@ -58,12 +58,28 @@ export const projects: {
     repo: 'https://github.com/BSinghOP/bank-management-system',
   },
   {
-    title: 'AyuTrace — Ethicons (team)',
+    title: 'AyuTrace — Ethicons',
     subtitle:
       'Team build with Ethicons. Blockchain traceability for Ayurvedic herbs — Solidity contracts, MongoDB, and consumer QR codes for farm-to-formulation history. Contributor, not sole author.',
     tags: ['Next.js', 'Solidity', 'Ethers.js', 'MongoDB', 'Hackathon'],
     live: 'https://ethicons.vercel.app',
     repo: 'https://github.com/BSinghOP/ethicons-ayutrace',
+  },
+  {
+    title: 'Flappy Floppy',
+    subtitle:
+      'Team contribution. Desktop Flappy Bird clone in Java with Swing + AWT — 2D animation, event handling, collision detection, resource management. Contributor, not sole author.',
+    tags: ['Java', 'Swing', 'Game'],
+    live: 'https://flappyfloppy.vercel.app',
+    repo: 'https://github.com/bitroop/flappyfloppy',
+  },
+  {
+    title: 'FNDP — Fake News Detector',
+    subtitle:
+      'Team contribution. ML-driven fake news detector — Python model classifies news headlines and articles for misinformation, served behind a React frontend. Contributor, not sole author.',
+    tags: ['Python', 'ML', 'React'],
+    live: 'https://fndp-frontend.vercel.app',
+    repo: 'https://github.com/Nikunjmiglani/FNDP---Fake-new-detector-project',
   },
   {
     title: 'Minecraft modded content',

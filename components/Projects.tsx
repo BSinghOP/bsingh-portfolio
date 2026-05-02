@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box, Trophy } from 'lucide-react';
+import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box, Trophy, BrainCog } from 'lucide-react';
 import {
   SiOpenjdk,
   SiReact,
@@ -16,6 +16,7 @@ import {
   SiSolidity,
   SiEthereum,
   SiMongodb,
+  SiPython,
 } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 import { projects } from '@/lib/content';
@@ -40,6 +41,10 @@ const TAG_ICONS: Record<string, TagIcon> = {
   'Ethers.js': { Icon: SiEthereum, color: '#627EEA' },
   MongoDB: { Icon: SiMongodb, color: '#47A248' },
   Hackathon: { Icon: Trophy, color: '#E3B341' },
+  Python: { Icon: SiPython, color: '#3776AB' },
+  ML: { Icon: BrainCog, color: '#FF6B9D' },
+  Swing: { Icon: SiOpenjdk, color: '#E76F00' },
+  Game: { Icon: Gamepad2, color: '#A371F7' },
 };
 const FALLBACK_TAG_ICON: TagIcon = { Icon: Package, color: '#8B949E' };
 
