@@ -131,12 +131,11 @@ export function FloatingLogo() {
               ) : (
                 <video
                   src="/logo.mp4"
-                  poster="/logo.jpg"
                   autoPlay
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                   onError={() => setVideoFailed(true)}
                   className="logo-modal__video"
                 />

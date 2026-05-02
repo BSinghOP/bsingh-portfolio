@@ -293,7 +293,7 @@ export function TechRadial() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 220, damping: 18 }}
       >
-        BSingh
+        My Stack
       </motion.div>
     </div>
   );
