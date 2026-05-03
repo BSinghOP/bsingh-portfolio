@@ -1,8 +1,8 @@
-# BSingh Portfolio — bsingh.codes
+# My Portfolio — bsingh.codes
 
-Personal portfolio site for Bibekpreet Singh Chugh.
+Personal portfolio site for myself.
 
-Built with Next.js 14 (App Router), Framer Motion, and Tailwind. Designed for self-hosting on a Linux VPS behind Nginx + PM2 — same setup pattern as `dbms.bsingh.codes`.
+Built with Next.js 14 (App Router), Framer Motion, and Tailwind. Designed for self-hosting on a Linux VPS behind Nginx + PM2
 
 ## Local development
 
@@ -116,7 +116,7 @@ pm2 restart portfolio
 ## Email setup (one-time, for contact form + custom email)
 
 1. **Cloudflare Email Routing** — log in to Cloudflare → bsingh.codes → Email → Routing. Set up `hello@bsingh.codes` to forward to your personal Gmail. Free, instant.
-2. **Resend** — sign up at https://resend.com (free 3k/month). Add `bsingh.codes` as a verified domain (DNS records they give you, add to Cloudflare). Generate an API key, paste it into `.env.production.local` as `RESEND_API_KEY`.
+2. **Resend** — sign up at https://resend.com (free 3k/month). Add `your domain` as a verified domain (DNS records they give you, add to Cloudflare). Generate an API key, paste it into `.env.production.local` as `RESEND_API_KEY`.
 
 Without `RESEND_API_KEY` set, the contact form silently no-ops on the server but still shows success to the visitor — useful for testing.
 
