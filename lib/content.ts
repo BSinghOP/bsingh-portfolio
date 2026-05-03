@@ -44,8 +44,8 @@ export const projects: {
   {
     title: 'Minecraft Server Infrastructure',
     subtitle:
-      'Multi-region Minecraft network. 1000+ concurrent peak. Cloudflare Spectrum DDoS mitigation, dedicated bare-metal hosts, custom plugin stack.',
-    tags: ['DevOps', 'Linux', 'Cloudflare', 'Java'],
+      'Production Minecraft network with 1000+ concurrent peak. Pterodactyl + Wings on Debian, load-balanced proxy fleet, Cloudflare Spectrum DDoS mitigation, custom Java plugin stack — in-game admin, plugin dev, and infra operator.',
+    tags: ['DevOps', 'Debian', 'Pterodactyl', 'Cloudflare', 'Java'],
     image: '/projects/battlepie.jpg',
     imageAlt: 'Battle Pie Minecraft network logo',
     live: 'https://battlepie.net',
