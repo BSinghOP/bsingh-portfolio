@@ -164,14 +164,9 @@ export function Hero() {
         <a href="#projects" className="btn btn-primary">
           see projects <ArrowUpRight size={15} />
         </a>
-        <span
-          className="btn"
-          style={{ opacity: 0.55, cursor: 'not-allowed' }}
-          title="Resume — to be uploaded"
-          aria-disabled
-        >
-          <FileDown size={14} /> resume — to be uploaded
-        </span>
+        <a href={personal.resume} className="btn" download>
+          <FileDown size={14} /> resume
+        </a>
         <div style={{ display: 'flex', gap: 14, marginLeft: 8 }}>
           <a
             href={personal.github}
