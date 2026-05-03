@@ -15,7 +15,8 @@ import {
   SiNodedotjs,
   SiExpress,
   SiMysql,
-  SiLinux,
+  SiDebian,
+  SiPterodactyl,
   SiNginx,
   SiPm2,
   SiCloudflare,
@@ -42,7 +43,8 @@ const TECH: Record<string, IconDef> = {
   Express: { Icon: SiExpress, color: 'currentColor' },
   MySQL: { Icon: SiMysql, color: '#4479A1' },
   'REST APIs': { Icon: Globe, color: '#8B949E' },
-  'Linux VPS': { Icon: SiLinux, color: '#FCC624' },
+  Debian: { Icon: SiDebian, color: '#A81D33' },
+  Pterodactyl: { Icon: SiPterodactyl, color: '#10539E' },
   Nginx: { Icon: SiNginx, color: '#009639' },
   PM2: { Icon: SiPm2, color: '#5C4EE5' },
   Cloudflare: { Icon: SiCloudflare, color: '#F38020' },
@@ -58,7 +60,7 @@ const SECTIONS = [
   {
     label: 'infra & ops',
     color: '#F38020',
-    items: ['Linux VPS', 'Nginx', 'PM2', 'Cloudflare', 'SSL/TLS', 'DDoS mitigation'],
+    items: ['Debian', 'Pterodactyl', 'Nginx', 'PM2', 'Cloudflare', 'SSL/TLS', 'DDoS mitigation'],
   },
 ];
 
