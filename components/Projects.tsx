@@ -224,6 +224,9 @@ function ProjectCard({
           aspect-ratio: 16 / 9;
           overflow: hidden;
           border-bottom: 1px solid var(--line-strong);
+          border-top-left-radius: 13px;
+          border-top-right-radius: 13px;
+          isolation: isolate;
           background:
             linear-gradient(
               180deg,
