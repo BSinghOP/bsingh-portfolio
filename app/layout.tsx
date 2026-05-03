@@ -17,14 +17,14 @@ const geist = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'BSingh — Bibekpreet Singh Chugh',
+  title: "BSingh's Portfolio",
   description:
     'CS undergrad at SRM Delhi-NCR. Building things, breaking servers, figuring it out.',
   icons: {
     icon: '/favicon.png',
   },
   openGraph: {
-    title: 'BSingh — Portfolio',
+    title: "BSingh's Portfolio",
     description: 'Building things. Breaking servers. Figuring it out.',
     url: 'https://bsingh.codes',
     siteName: 'BSingh',
