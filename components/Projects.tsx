@@ -17,6 +17,8 @@ import {
   SiEthereum,
   SiMongodb,
   SiPython,
+  SiDebian,
+  SiPterodactyl,
 } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 import { projects } from '@/lib/content';
@@ -45,6 +47,8 @@ const TAG_ICONS: Record<string, TagIcon> = {
   ML: { Icon: BrainCog, color: '#FF6B9D' },
   Swing: { Icon: SiOpenjdk, color: '#E76F00' },
   Game: { Icon: Gamepad2, color: '#A371F7' },
+  Debian: { Icon: SiDebian, color: '#A81D33' },
+  Pterodactyl: { Icon: SiPterodactyl, color: '#10539E' },
 };
 const FALLBACK_TAG_ICON: TagIcon = { Icon: Package, color: '#8B949E' };
 
