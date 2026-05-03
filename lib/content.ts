@@ -46,6 +46,8 @@ export const projects: {
     subtitle:
       'Multi-region Minecraft network. 1000+ concurrent peak. Cloudflare Spectrum DDoS mitigation, dedicated bare-metal hosts, custom plugin stack.',
     tags: ['DevOps', 'Linux', 'Cloudflare', 'Java'],
+    image: '/projects/battlepie.jpg',
+    imageAlt: 'Battle Pie Minecraft network logo',
     live: 'https://battlepie.net',
     store: 'https://store.battlepie.net',
   },
@@ -54,6 +56,8 @@ export const projects: {
     subtitle:
       'Full-stack bank management system. DBMS course project taken from broken state to live production. Auth with freeze enforcement, transaction history, admin panel.',
     tags: ['React', 'Node.js', 'MySQL', 'Nginx', 'PM2'],
+    image: '/projects/vault.jpg',
+    imageAlt: "BSingh's Vault dashboard",
     live: 'https://dbms.bsingh.codes',
     repo: 'https://github.com/BSinghOP/bank-management-system',
   },
@@ -62,6 +66,8 @@ export const projects: {
     subtitle:
       'Team build with Ethicons. Blockchain traceability for Ayurvedic herbs — Solidity contracts, MongoDB, and consumer QR codes for farm-to-formulation history. Contributor, not sole author.',
     tags: ['Next.js', 'Solidity', 'Ethers.js', 'MongoDB', 'Hackathon'],
+    image: '/projects/ayutrace.jpg',
+    imageAlt: 'AyuTrace landing page — Blockchain-Powered Traceability',
     live: 'https://ethicons.vercel.app',
     repo: 'https://github.com/BSinghOP/ethicons-ayutrace',
   },
@@ -70,6 +76,8 @@ export const projects: {
     subtitle:
       'Team contribution. Desktop Flappy Bird clone in Java with Swing + AWT — 2D animation, event handling, collision detection, resource management. Contributor, not sole author.',
     tags: ['Java', 'Swing', 'Game'],
+    image: '/projects/flappyfloppy.jpg',
+    imageAlt: 'Flappy Floppy game landing page',
     live: 'https://flappyfloppy.vercel.app',
     repo: 'https://github.com/bitroop/flappyfloppy',
   },
@@ -78,6 +86,8 @@ export const projects: {
     subtitle:
       'Team contribution. ML-driven fake news detector — Python model classifies news headlines and articles for misinformation, served behind a React frontend. Contributor, not sole author.',
     tags: ['Python', 'ML', 'React'],
+    image: '/projects/fndp.jpg',
+    imageAlt: 'FNDP — AI-Powered Fake News Detector hero',
     live: 'https://fndp-frontend.vercel.app',
     repo: 'https://github.com/Nikunjmiglani/FNDP---Fake-new-detector-project',
   },
@@ -86,6 +96,8 @@ export const projects: {
     subtitle:
       'Modded Minecraft gameplay and showcases — modpack playthroughs, custom mod features, and progression runs.',
     tags: ['Minecraft', 'Modded', 'Modpacks', 'Gameplay'],
+    image: '/projects/minecraft-modded.jpg',
+    imageAlt: 'YT Jobs portfolio of Minecraft modded content thumbnails',
     live: 'https://ytjobs.co/@BSingh',
   },
   {
