@@ -4,7 +4,7 @@ export const personal = {
   email: 'hello@bsingh.codes',
   github: 'https://github.com/BSinghOP',
   githubUsername: 'BSinghOP',
-  linkedin: '#',
+  linkedin: 'https://www.linkedin.com/in/bibekpreet-singh-chugh-0b3a96325/',
   ytJobs: 'https://ytjobs.co/@BSingh',
   domain: 'bsingh.codes',
   resume: '/resume.pdf',
