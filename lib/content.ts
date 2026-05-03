@@ -134,18 +134,23 @@ export const skills = [
 
 export const achievements = [
   {
+    title: 'Smart India Hackathon 2025 — Internal Round Cleared',
+    org: 'Team Ethicons',
+    note: 'Cleared the Internal SIH 2025 round with AyuTrace — a blockchain-based herb traceability solution built with the team.',
+  },
+  {
+    title: 'Hackstasy Hackathon — Top 20',
+    org: '300+ participating teams',
+    note: 'Ranked in the Top 20 teams for a scalable full-stack project.',
+  },
+  {
     title: '1st Prize — College Science Project Expo',
     org: 'SRM Institute of Science and Technology, Delhi-NCR',
     note: 'Awarded first place at the college-level science project exhibition.',
   },
   {
-    title: 'Hackathon Participations',
-    org: 'Various inter-college and online hackathons',
-    note: 'Multiple participations across student hackathons during undergraduate study. Recent: AyuTrace with team Ethicons — blockchain herb traceability.',
-  },
-  {
     title: 'Production Game Server Operations',
-    org: 'Self-operated Minecraft network',
+    org: 'Self-operated Minecraft network (Battle Pie)',
     note: '1000+ concurrent peak. Cloudflare Spectrum DDoS mitigation. Multi-host architecture.',
   },
 ];
