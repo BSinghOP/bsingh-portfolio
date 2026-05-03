@@ -123,7 +123,7 @@ export function Hero() {
           <span key={i}>
             {i === hero.accentLine ? (
               <span
-                style={{ color: 'var(--accent)', fontStyle: 'italic', fontWeight: 500 }}
+                style={{ color: 'var(--accent)', fontWeight: 500 }}
               >
                 {line}
               </span>
