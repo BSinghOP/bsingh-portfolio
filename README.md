@@ -34,7 +34,7 @@ This follows the same pattern as your Vault project, but for a Next.js Node app 
 
 ### 1. DNS
 
-Point `bsingh.codes` (root) to the new VPS's IP via your DNS provider. Add an A record for `@` and one for `www`. Wait for propagation (a few minutes).
+Point `your domain` (root) to the new VPS's IP via your DNS provider. Add an A record for `@` and one for `www`. Wait for propagation (a few minutes).
 
 ### 2. On the VPS
 
