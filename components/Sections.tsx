@@ -9,7 +9,7 @@ const sectionStyle: React.CSSProperties = {
   zIndex: 1,
   maxWidth: 1000,
   margin: '0 auto',
-  padding: '4rem 2rem',
+  padding: 'clamp(2.5rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem)',
 };
 const h2Style: React.CSSProperties = {
   fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Globe, ShieldCheck, Lock } from 'lucide-react';
 import {
@@ -146,13 +147,25 @@ export function TechRadial() {
   }
 
   const ROTATION_DURATION = 60;
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 700px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
 
   return (
     <div className="tech-radial" aria-hidden>
       <motion.div
         className="tech-radial__rotor"
-        animate={{ rotate: 360 }}
-        transition={{ duration: ROTATION_DURATION, repeat: Infinity, ease: 'linear' }}
+        animate={isMobile ? {} : { rotate: 360 }}
+        transition={
+          isMobile
+            ? { duration: 0 }
+            : { duration: ROTATION_DURATION, repeat: Infinity, ease: 'linear' }
+        }
       >
       <svg className="tech-radial__svg" viewBox={viewBox}>
         {meshEdges.map((edge, i) => (
@@ -221,7 +234,11 @@ export function TechRadial() {
             borderColor: s.color + '88',
           }}
           initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 1, scale: 1, rotate: -360 }}
+          animate={
+            isMobile
+              ? { opacity: 1, scale: 1 }
+              : { opacity: 1, scale: 1, rotate: -360 }
+          }
           transition={{
             opacity: {
               delay: 0.05 + sIdx * 0.1,
@@ -261,7 +278,11 @@ export function TechRadial() {
               } as React.CSSProperties
             }
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1, rotate: -360 }}
+            animate={
+              isMobile
+                ? { scale: 1, opacity: 1 }
+                : { scale: 1, opacity: 1, rotate: -360 }
+            }
             whileHover={{
               scale: 1.18,
               transition: { type: 'spring', stiffness: 320, damping: 18 },

@@ -40,7 +40,7 @@ export function Hero() {
         zIndex: 1,
         maxWidth: 880,
         margin: '0 auto',
-        padding: '3rem 2rem 5rem',
+        padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 7vw, 5rem)',
       }}
     >
       <motion.div
