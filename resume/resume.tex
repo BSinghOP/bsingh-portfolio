@@ -1,0 +1,97 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[top=0.4in,bottom=0.4in,left=0.55in,right=0.55in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\titleformat{\section}{\large\scshape}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{3pt}{1pt}
+
+\setlist[itemize]{leftmargin=*, itemsep=1pt, topsep=1pt, parsep=0pt}
+\setlist[itemize,2]{leftmargin=12pt, itemsep=0pt, topsep=0pt, label=\textopenbullet}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=black,
+  pdftitle={Bibekpreet Singh Chugh -- Resume},
+  pdfauthor={Bibekpreet Singh Chugh}
+}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\textbf{Bibekpreet Singh Chugh}}\\[4pt]
++91 9027844360 \textbar{} \href{mailto:hello@bsingh.codes}{hello@bsingh.codes} \textbar{} \href{https://www.linkedin.com/in/bibekpreet-singh-chugh-0b3a96325/}{LinkedIn} \textbar{} \href{https://github.com/BSinghOP}{GitHub} \textbar{} \href{https://bsingh.codes}{Portfolio}
+\end{center}
+
+\section*{Summary}
+Computer Science undergraduate at SRM Delhi-NCR with hands-on experience in full-stack web development, DevOps, and production infrastructure. Built and deployed end-to-end applications using React, Node.js, and MySQL on Linux VPS with Nginx and PM2 process supervision. Operates production game-server infrastructure serving 1000+ concurrent players with Cloudflare Spectrum DDoS protection and SSL/TLS. Strong in scalable application design, deployment automation, and full software lifecycle.
+
+\section*{Education}
+\begin{itemize}
+\item \textbf{SRM Institute of Science and Technology} \hfill Delhi-NCR, IN \\
+B.Tech in Computer Science Engineering; \textbf{CGPA: 8.63} \hfill Aug 2024 -- Jul 2028
+\item \textbf{The Adhyyan School} \hfill IN \\
+Senior Secondary (CBSE), PCM: 67\% \hfill Aug 2022 -- Jul 2024
+\end{itemize}
+
+\section*{Experience}
+\begin{itemize}
+\item \textbf{Battle Pie -- Self-Operated Minecraft Network} \hfill IN \\
+\textit{Network Operator \& Infrastructure Engineer} \hfill 2023 -- Present
+\begin{itemize}
+\item Operate multi-region Minecraft server network with \textbf{1000+ concurrent player peaks}; multi-host architecture across dedicated bare-metal infrastructure.
+\item Configured and maintain \textbf{Cloudflare Spectrum} DDoS mitigation, SSL/TLS termination, and Nginx reverse proxy across the network.
+\item Deploy and supervise game-server processes via \textbf{PM2 on Linux VPS}, sustaining 99.9\% production uptime.
+\item Maintain a custom Java plugin stack and integrated customer-facing store at \href{https://battlepie.net}{battlepie.net}.
+\end{itemize}
+\end{itemize}
+
+\section*{Projects}
+\begin{itemize}
+\item \textbf{BSingh's Vault -- Full-Stack Bank Management System} \hfill 2025 \\
+\href{https://dbms.bsingh.codes}{dbms.bsingh.codes} \textbar{} \href{https://github.com/BSinghOP/bank-management-system}{GitHub}
+\begin{itemize}
+\item Took DBMS course project from broken state to production-grade deployment: authentication with freeze enforcement, full transaction history, and admin panel.
+\item Built with \textbf{React, Node.js, Express, MySQL}; deployed on Linux VPS behind Nginx with PM2 process supervision; sustains 99.9\% production uptime.
+\end{itemize}
+
+\item \textbf{AyuTrace -- Blockchain Herb Traceability} (Team Contributor) \hfill 2025 \\
+\href{https://ethicons.vercel.app}{ethicons.vercel.app} \textbar{} \href{https://github.com/BSinghOP/ethicons-ayutrace}{GitHub}
+\begin{itemize}
+\item Contributed to \textbf{Solidity} smart contracts on EVM for tamper-proof Ayurvedic herb supply-chain tracking.
+\item Implemented geo-tagged origin records, immutable quality certifications, and consumer-facing QR codes for full farm-to-formulation history.
+\item Stack: \textbf{Next.js, Solidity, ethers.js, MongoDB}.
+\end{itemize}
+
+\item \textbf{FNDP -- AI-Powered Fake News Detector} (Team Contributor) \hfill 2025 \\
+\href{https://fndp-frontend.vercel.app}{fndp-frontend.vercel.app} \textbar{} \href{https://github.com/Nikunjmiglani/FNDP---Fake-new-detector-project}{GitHub}
+\begin{itemize}
+\item Contributed to ML-based misinformation detection using a \textbf{Python} classification model that identifies fake headlines and articles.
+\item Built \textbf{React} frontend deployed on Vercel that interfaces with the detection backend.
+\end{itemize}
+\end{itemize}
+
+\section*{Achievements}
+\begin{itemize}
+\item \textbf{1st Prize -- College Science Project Expo}, SRM Institute of Science and Technology, Delhi-NCR.
+\item \textbf{Hackathon Participations}: Multiple inter-college and online hackathons including team builds with Ethicons (AyuTrace blockchain traceability).
+\item \textbf{Production Game-Server Operations}: Sustained 1000+ concurrent peak with Cloudflare Spectrum DDoS mitigation across multi-host architecture.
+\end{itemize}
+
+\enlargethispage{30pt}
+\section*{Technical Skills}
+\begin{itemize}
+\item \textbf{Languages}: C, C++, Python, Java, JavaScript, TypeScript, SQL
+\item \textbf{Frameworks \& Databases}: React, Next.js, Node.js, Express, Tailwind CSS, MySQL, MongoDB
+\item \textbf{Infrastructure, DevOps \& Concepts}: Linux Server Administration, Nginx, PM2, Cloudflare, SSL/TLS, DDoS Mitigation, GitHub Actions (CI/CD), Git, Vercel, REST APIs, Full-Stack Development, DBMS, OOP, DSA, Web Security
+\end{itemize}
+
+\end{document}
