@@ -6,19 +6,38 @@ import { stats as fallbackStats, personal } from '@/lib/content';
 
 type GitHubStats = {
   repos: number | null;
-  followers: number | null;
 };
 
-function ContributionGrid() {
-  const cells = Array.from({ length: 7 * 26 }, (_, i) => {
-    const seed = (i * 9301 + 49297) % 233280;
-    const r = seed / 233280;
-    if (r < 0.45) return 0;
-    if (r < 0.7) return 1;
-    if (r < 0.85) return 2;
-    if (r < 0.95) return 3;
-    return 4;
-  });
+type Contribution = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
+
+const GRID_CELLS = 7 * 26;
+
+function ContributionGrid({ username }: { username: string }) {
+  const [cells, setCells] = useState<number[]>(() =>
+    Array.from({ length: GRID_CELLS }, () => 0)
+  );
+
+  useEffect(() => {
+    let aborted = false;
+    fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { contributions?: Contribution[] } | null) => {
+        if (aborted || !d?.contributions?.length) return;
+        const recent = d.contributions.slice(-GRID_CELLS);
+        const levels = recent.map((c) => c.level ?? 0);
+        if (levels.length < GRID_CELLS) {
+          const pad = Array.from({ length: GRID_CELLS - levels.length }, () => 0);
+          setCells([...pad, ...levels]);
+        } else {
+          setCells(levels);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      aborted = true;
+    };
+  }, [username]);
+
   return (
     <div className="contrib">
       {cells.map((v, i) => (
@@ -88,13 +107,13 @@ function ContributionGrid() {
 }
 
 export function Stats() {
-  const [gh, setGh] = useState<GitHubStats>({ repos: null, followers: null });
+  const [gh, setGh] = useState<GitHubStats>({ repos: null });
 
   useEffect(() => {
     fetch(`https://api.github.com/users/${personal.githubUsername}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d) setGh({ repos: d.public_repos, followers: d.followers });
+        if (d) setGh({ repos: d.public_repos });
       })
       .catch(() => {});
   }, []);
@@ -157,7 +176,7 @@ export function Stats() {
       </div>
 
       <div style={{ marginTop: '1.6rem' }}>
-        <ContributionGrid />
+        <ContributionGrid username={personal.githubUsername} />
       </div>
 
       <style jsx>{`
