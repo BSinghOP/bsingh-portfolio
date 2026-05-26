@@ -1,4 +1,4 @@
-# My Portfolio — bsingh.codes
+# My Portfolio — bsingh.dev
 
 Personal portfolio site for myself.
 
@@ -54,8 +54,8 @@ npm run build
 # Set env vars (for the contact form). Create .env.production.local:
 cat > .env.production.local <<'EOF'
 RESEND_API_KEY=re_your_key_here
-CONTACT_TO=hello@bsingh.codes
-CONTACT_FROM=BSingh Portfolio <noreply@bsingh.codes>
+CONTACT_TO=hello@bsingh.dev
+CONTACT_FROM=BSingh Portfolio <noreply@bsingh.dev>
 EOF
 
 # Run with PM2
@@ -68,12 +68,12 @@ The app listens on **port 3001** (set in `package.json`'s `start` script — cha
 
 ### 3. Nginx config
 
-Create `/etc/nginx/sites-available/bsingh.codes`:
+Create `/etc/nginx/sites-available/bsingh.dev`:
 
 ```nginx
 server {
     listen 80;
-    server_name bsingh.codes www.bsingh.codes;
+    server_name bsingh.dev www.bsingh.dev;
 
     location / {
         proxy_pass http://localhost:3001;
@@ -92,7 +92,7 @@ server {
 Enable + reload:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/bsingh.codes /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/bsingh.dev /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -100,7 +100,7 @@ sudo systemctl reload nginx
 ### 4. SSL
 
 ```bash
-sudo certbot --nginx -d bsingh.codes -d www.bsingh.codes
+sudo certbot --nginx -d bsingh.dev -d www.bsingh.dev
 ```
 
 ### 5. Deploy updates later
@@ -115,7 +115,7 @@ pm2 restart portfolio
 
 ## Email setup (one-time, for contact form + custom email)
 
-1. **Cloudflare Email Routing** — log in to Cloudflare → bsingh.codes → Email → Routing. Set up `hello@bsingh.codes` to forward to your personal Gmail. Free, instant.
+1. **Cloudflare Email Routing** — log in to Cloudflare → bsingh.dev → Email → Routing. Set up `hello@bsingh.dev` to forward to your personal Gmail. Free, instant.
 2. **Resend** — sign up at https://resend.com (free 3k/month). Add `your domain` as a verified domain (DNS records they give you, add to Cloudflare). Generate an API key, paste it into `.env.production.local` as `RESEND_API_KEY`.
 
 Without `RESEND_API_KEY` set, the contact form silently no-ops on the server but still shows success to the visitor — useful for testing.
