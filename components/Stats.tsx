@@ -9,53 +9,90 @@ type GitHubStats = {
 };
 
 type Contribution = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
+type Day = Contribution | null;
 
-const GRID_CELLS = 7 * 26;
+function buildDays(contribs: Contribution[]): Day[] {
+  if (!contribs.length) return [];
+  const firstDow = new Date(contribs[0].date + 'T00:00:00Z').getUTCDay();
+  const pad: Day[] = Array.from({ length: firstDow }, () => null);
+  return [...pad, ...contribs];
+}
 
 function ContributionGrid({ username }: { username: string }) {
-  const [cells, setCells] = useState<number[]>(() =>
-    Array.from({ length: GRID_CELLS }, () => 0)
-  );
+  const [days, setDays] = useState<Day[]>([]);
+  const [total, setTotal] = useState<number | null>(null);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
   useEffect(() => {
     let aborted = false;
     fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d: { contributions?: Contribution[] } | null) => {
-        if (aborted || !d?.contributions?.length) return;
-        const recent = d.contributions.slice(-GRID_CELLS);
-        const levels = recent.map((c) => c.level ?? 0);
-        if (levels.length < GRID_CELLS) {
-          const pad = Array.from({ length: GRID_CELLS - levels.length }, () => 0);
-          setCells([...pad, ...levels]);
-        } else {
-          setCells(levels);
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('http ' + r.status))))
+      .then((d: { contributions?: Contribution[]; total?: Record<string, number> } | null) => {
+        if (aborted || !d?.contributions?.length) {
+          if (!aborted) setStatus('error');
+          return;
         }
+        setDays(buildDays(d.contributions));
+        setTotal(d.contributions.reduce((s, c) => s + (c.count ?? 0), 0));
+        setStatus('ready');
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!aborted) setStatus('error');
+      });
     return () => {
       aborted = true;
     };
   }, [username]);
 
+  const formatDate = (iso: string) =>
+    new Date(iso + 'T00:00:00Z').toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
+
   return (
-    <div className="contrib">
-      {cells.map((v, i) => (
-        <motion.div
-          key={i}
-          className={`contrib__cell contrib__cell--${v}`}
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 + (i % 26) * 0.012, duration: 0.3 }}
-        />
-      ))}
+    <div className="contrib-card">
+      <div className="contrib-scroll">
+        <div className="contrib" role="img" aria-label={total != null ? `${total} GitHub contributions in the last year` : 'GitHub contributions in the last year'}>
+          {days.map((c, i) => {
+            const col = Math.floor(i / 7);
+            if (!c) {
+              return <div key={i} className="contrib__cell contrib__cell--pad" aria-hidden />;
+            }
+            return (
+              <motion.div
+                key={i}
+                className={`contrib__cell contrib__cell--${c.level}`}
+                title={`${c.count} contribution${c.count === 1 ? '' : 's'} on ${formatDate(c.date)}`}
+                initial={{ opacity: 0, scale: 0.4 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.05 + col * 0.008, duration: 0.22 }}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="contrib-footer mono">
+        <span className="contrib-total">
+          {status === 'ready' && total != null && `${total.toLocaleString()} contributions in the last year`}
+          {status === 'loading' && 'loading contributions…'}
+          {status === 'error' && 'couldn’t load contributions'}
+        </span>
+        <span className="legend" aria-hidden>
+          <span>less</span>
+          <span className="contrib__cell contrib__cell--0 legend-cell" />
+          <span className="contrib__cell contrib__cell--1 legend-cell" />
+          <span className="contrib__cell contrib__cell--2 legend-cell" />
+          <span className="contrib__cell contrib__cell--3 legend-cell" />
+          <span className="contrib__cell contrib__cell--4 legend-cell" />
+          <span>more</span>
+        </span>
+      </div>
       <style jsx>{`
-        .contrib {
-          display: grid;
-          grid-template-columns: repeat(26, 1fr);
-          grid-auto-rows: 12px;
-          gap: 3px;
-          padding: 1rem 1.2rem;
+        .contrib-card {
+          padding: 1.1rem 1.2rem 0.9rem;
           border: 1px solid var(--line-strong);
           border-radius: 12px;
           background:
@@ -68,37 +105,77 @@ function ContributionGrid({ username }: { username: string }) {
             0 8px 16px rgba(0, 0, 0, 0.25),
             0 22px 40px -14px rgba(0, 0, 0, 0.5);
         }
+        .contrib-scroll {
+          overflow-x: auto;
+          overflow-y: hidden;
+          scrollbar-width: thin;
+          -webkit-overflow-scrolling: touch;
+        }
+        .contrib {
+          --cell: 12px;
+          --gap: 3px;
+          display: grid;
+          grid-template-rows: repeat(7, var(--cell));
+          grid-auto-flow: column;
+          grid-auto-columns: var(--cell);
+          gap: var(--gap);
+          min-width: max-content;
+          padding: 2px 0;
+        }
+        .contrib-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 0.85rem;
+          font-size: 11px;
+          color: var(--fg-dim);
+        }
+        .legend {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .legend :global(.legend-cell) {
+          width: 10px;
+          height: 10px;
+        }
         :global(.contrib__cell) {
           border-radius: 2px;
           background: var(--line);
+          display: block;
+        }
+        :global(.contrib__cell--pad) {
+          background: transparent;
         }
         :global(.contrib__cell--1) {
-          background: rgba(63, 185, 80, 0.25);
+          background: rgba(63, 185, 80, 0.28);
         }
         :global(.contrib__cell--2) {
-          background: rgba(63, 185, 80, 0.45);
+          background: rgba(63, 185, 80, 0.5);
         }
         :global(.contrib__cell--3) {
-          background: rgba(63, 185, 80, 0.7);
+          background: rgba(63, 185, 80, 0.75);
         }
         :global(.contrib__cell--4) {
-          background: rgba(63, 185, 80, 0.95);
+          background: rgba(63, 185, 80, 0.98);
         }
         :root[data-theme='light'] :global(.contrib__cell--1) {
-          background: rgba(26, 127, 55, 0.18);
+          background: rgba(26, 127, 55, 0.2);
         }
         :root[data-theme='light'] :global(.contrib__cell--2) {
-          background: rgba(26, 127, 55, 0.4);
+          background: rgba(26, 127, 55, 0.42);
         }
         :root[data-theme='light'] :global(.contrib__cell--3) {
-          background: rgba(26, 127, 55, 0.65);
+          background: rgba(26, 127, 55, 0.68);
         }
         :root[data-theme='light'] :global(.contrib__cell--4) {
-          background: rgba(26, 127, 55, 0.9);
+          background: rgba(26, 127, 55, 0.92);
         }
         @media (max-width: 600px) {
           .contrib {
-            grid-template-columns: repeat(20, 1fr);
+            --cell: 9px;
+            --gap: 2px;
           }
         }
       `}</style>
