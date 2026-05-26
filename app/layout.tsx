@@ -23,6 +23,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.bsingh.dev'),
   title: "BSingh's Portfolio",
   description:
     'CS undergrad at SRM Delhi-NCR. Building things, breaking servers, figuring it out.',
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BSingh's Portfolio",
     description: 'Building things. Breaking servers. Figuring it out.',
-    url: 'https://bsingh.dev',
+    url: 'https://www.bsingh.dev',
     siteName: 'BSingh',
     images: ['/logo.jpg'],
     type: 'website',
