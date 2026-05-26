@@ -5,3 +5,6 @@ out/
 .DS_Store
 *.log
 tsconfig.tsbuildinfo
+resume/*.aux
+resume/*.out
+resume/resume.pdf
