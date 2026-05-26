@@ -1,12 +1,12 @@
 export const personal = {
   name: 'Bibekpreet Singh Chugh',
   shortName: 'BSingh',
-  email: 'hello@bsingh.codes',
+  email: 'hello@bsingh.dev',
   github: 'https://github.com/BSinghOP',
   githubUsername: 'BSinghOP',
   linkedin: 'https://www.linkedin.com/in/bibekpreet-singh-chugh-0b3a96325/',
   ytJobs: 'https://ytjobs.co/@BSingh',
-  domain: 'bsingh.codes',
+  domain: 'bsingh.dev',
   resume: '/resume.pdf',
 };
 
@@ -26,7 +26,7 @@ export const about = [
 export const stats = [
   { label: 'public repos', value: '1', hint: '+ private projects' },
   { label: 'years coding', value: '3+' },
-  { label: 'prod uptime', value: '99.9%', hint: 'dbms.bsingh.codes' },
+  { label: 'prod uptime', value: '99.9%', hint: 'dbms.bsingh.dev' },
   { label: 'concurrent peak', value: '1000+', hint: 'minecraft infra' },
 ];
 
@@ -58,7 +58,7 @@ export const projects: {
     tags: ['React', 'Node.js', 'MySQL', 'Nginx', 'PM2'],
     image: '/projects/vault.jpg',
     imageAlt: "BSingh's Vault dashboard",
-    live: 'https://dbms.bsingh.codes',
+    live: 'https://dbms.bsingh.dev',
     repo: 'https://github.com/BSinghOP/bank-management-system',
   },
   {

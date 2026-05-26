@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BSingh's Portfolio",
     description: 'Building things. Breaking servers. Figuring it out.',
-    url: 'https://bsingh.codes',
+    url: 'https://bsingh.dev',
     siteName: 'BSingh',
     images: ['/logo.jpg'],
     type: 'website',

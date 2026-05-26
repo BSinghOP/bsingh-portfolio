@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const to = process.env.CONTACT_TO || 'hello@bsingh.codes';
-    const from = process.env.CONTACT_FROM || 'noreply@bsingh.codes';
+    const to = process.env.CONTACT_TO || 'hello@bsingh.dev';
+    const from = process.env.CONTACT_FROM || 'noreply@bsingh.dev';
 
     if (!apiKey) {
       console.log('[contact form — no Resend key set]', { name, email, message });
