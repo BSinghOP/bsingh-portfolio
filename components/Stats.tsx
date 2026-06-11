@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { stats as fallbackStats, personal } from '@/lib/content';
 
@@ -9,31 +9,42 @@ type GitHubStats = {
 };
 
 type Contribution = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
-type Day = Contribution | null;
 
-function buildDays(contribs: Contribution[]): Day[] {
-  if (!contribs.length) return [];
-  const firstDow = new Date(contribs[0].date + 'T00:00:00Z').getUTCDay();
-  const pad: Day[] = Array.from({ length: firstDow }, () => null);
-  return [...pad, ...contribs];
+const DAY_LABELS = ['', 'mon', '', 'wed', '', 'fri', ''];
+const MONTH_NAMES = [
+  'jan', 'feb', 'mar', 'apr', 'may', 'jun',
+  'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
+];
+
+function tooltipFor(c: Contribution) {
+  const ds = new Date(c.date + 'T00:00:00Z').toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+  return c.count === 0
+    ? `no contributions · ${ds}`
+    : `${c.count} contribution${c.count === 1 ? '' : 's'} · ${ds}`;
 }
 
 function ContributionGrid({ username }: { username: string }) {
-  const [days, setDays] = useState<Day[]>([]);
+  const [days, setDays] = useState<Contribution[] | null>(null);
   const [total, setTotal] = useState<number | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
   useEffect(() => {
     let aborted = false;
-    fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`)
+    fetch('/api/contributions')
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('http ' + r.status))))
-      .then((d: { contributions?: Contribution[]; total?: Record<string, number> } | null) => {
-        if (aborted || !d?.contributions?.length) {
-          if (!aborted) setStatus('error');
+      .then((d: { contributions?: Contribution[]; total?: number } | null) => {
+        if (aborted) return;
+        if (!d?.contributions?.length) {
+          setStatus('error');
           return;
         }
-        setDays(buildDays(d.contributions));
-        setTotal(d.contributions.reduce((s, c) => s + (c.count ?? 0), 0));
+        setDays(d.contributions);
+        setTotal(d.total ?? d.contributions.reduce((s, c) => s + c.count, 0));
         setStatus('ready');
       })
       .catch(() => {
@@ -42,54 +53,123 @@ function ContributionGrid({ username }: { username: string }) {
     return () => {
       aborted = true;
     };
-  }, [username]);
+  }, []);
 
-  const formatDate = (iso: string) =>
-    new Date(iso + 'T00:00:00Z').toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      timeZone: 'UTC',
+  // GitHub layout: columns = weeks (oldest left), rows = Sun..Sat
+  const { weeks, months } = useMemo(() => {
+    if (!days) {
+      return {
+        weeks: Array.from({ length: 53 }, () => Array<Contribution | null>(7).fill(null)),
+        months: [] as { idx: number; label: string }[],
+      };
+    }
+    const lead = new Date(days[0].date + 'T00:00:00Z').getUTCDay();
+    const cells: (Contribution | null)[] = [...Array(lead).fill(null), ...days];
+    while (cells.length % 7 !== 0) cells.push(null);
+    const weeks: (Contribution | null)[][] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+
+    const months: { idx: number; label: string }[] = [];
+    let prev = -1;
+    weeks.forEach((w, i) => {
+      const d = w.find(Boolean);
+      if (!d) return;
+      const m = new Date(d.date + 'T00:00:00Z').getUTCMonth();
+      if (m !== prev) {
+        months.push({ idx: i, label: MONTH_NAMES[m] });
+        prev = m;
+      }
     });
+    // first label overlaps the second when the year starts mid-month
+    if (months.length > 1 && months[1].idx - months[0].idx < 3) months.shift();
+
+    return { weeks, months };
+  }, [days]);
 
   return (
-    <div className="contrib-card">
-      <div className="contrib-scroll">
-        <div className="contrib" role="img" aria-label={total != null ? `${total} GitHub contributions in the last year` : 'GitHub contributions in the last year'}>
-          {days.map((c, i) => {
-            const col = Math.floor(i / 7);
-            if (!c) {
-              return <div key={i} className="contrib__cell contrib__cell--pad" aria-hidden />;
-            }
-            return (
-              <motion.div
-                key={i}
-                className={`contrib__cell contrib__cell--${c.level}`}
-                title={`${c.count} contribution${c.count === 1 ? '' : 's'} on ${formatDate(c.date)}`}
-                initial={{ opacity: 0, scale: 0.4 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.05 + col * 0.008, duration: 0.22 }}
-              />
-            );
-          })}
-        </div>
-      </div>
-      <div className="contrib-footer mono">
-        <span className="contrib-total">
-          {status === 'ready' && total != null && `${total.toLocaleString()} contributions in the last year`}
+    <motion.div
+      className="contrib-card"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+    >
+      <div className="contrib-head mono">
+        <span>
+          {status === 'ready' && total != null &&
+            `${total.toLocaleString()} contributions in the last year`}
           {status === 'loading' && 'loading contributions…'}
           {status === 'error' && 'couldn’t load contributions'}
         </span>
-        <span className="legend" aria-hidden>
-          <span>less</span>
-          <span className="contrib__cell contrib__cell--0 legend-cell" />
-          <span className="contrib__cell contrib__cell--1 legend-cell" />
-          <span className="contrib__cell contrib__cell--2 legend-cell" />
-          <span className="contrib__cell contrib__cell--3 legend-cell" />
-          <span className="contrib__cell contrib__cell--4 legend-cell" />
-          <span>more</span>
-        </span>
+        <a
+          href={`https://github.com/${username}`}
+          target="_blank"
+          rel="noreferrer"
+          className="contrib-profile"
+        >
+          @{username}
+        </a>
       </div>
+
+      <div className="contrib-scroll">
+        <div className="contrib-body">
+          <div className="contrib-daylabels mono">
+            {DAY_LABELS.map((l, i) => (
+              <span key={i}>{l}</span>
+            ))}
+          </div>
+          <div>
+            <div
+              className="contrib-months mono"
+              style={{ gridTemplateColumns: `repeat(${weeks.length}, 11px)` }}
+            >
+              {months.map((m) => (
+                <span key={m.idx} style={{ gridColumn: `${m.idx + 1} / span 3` }}>
+                  {m.label}
+                </span>
+              ))}
+            </div>
+            <div
+              className="contrib-grid"
+              role="img"
+              aria-label={
+                total != null
+                  ? `${total} GitHub contributions in the last year`
+                  : 'GitHub contributions in the last year'
+              }
+              style={{ gridTemplateColumns: `repeat(${weeks.length}, 11px)` }}
+            >
+              {weeks.map((week, wi) =>
+                week.map((c, di) =>
+                  c ? (
+                    <div
+                      key={`${wi}-${di}`}
+                      className={`ccell lv${c.level}${di < 3 ? ' ccell--flip' : ''}`}
+                      data-tip={tooltipFor(c)}
+                      style={{ gridColumn: wi + 1, gridRow: di + 1 }}
+                    />
+                  ) : (
+                    <div
+                      key={`${wi}-${di}`}
+                      className="ccell ccell--pad"
+                      style={{ gridColumn: wi + 1, gridRow: di + 1 }}
+                      aria-hidden
+                    />
+                  )
+                )
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="contrib-legend mono" aria-hidden>
+        <span>less</span>
+        {[0, 1, 2, 3, 4].map((l) => (
+          <span key={l} className={`ccell lv${l}`} />
+        ))}
+        <span>more</span>
+      </div>
+
       <style jsx>{`
         .contrib-card {
           padding: 1.1rem 1.2rem 0.9rem;
@@ -105,81 +185,152 @@ function ContributionGrid({ username }: { username: string }) {
             0 8px 16px rgba(0, 0, 0, 0.25),
             0 22px 40px -14px rgba(0, 0, 0, 0.5);
         }
+        .contrib-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 1rem;
+          font-size: 12px;
+          color: var(--fg-muted);
+          margin-bottom: 0.9rem;
+          flex-wrap: wrap;
+        }
+        .contrib-profile {
+          color: var(--accent);
+          text-decoration: none;
+          font-size: 11.5px;
+        }
+        .contrib-profile:hover {
+          text-decoration: underline;
+        }
         .contrib-scroll {
           overflow-x: auto;
           overflow-y: hidden;
           scrollbar-width: thin;
           -webkit-overflow-scrolling: touch;
+          padding-bottom: 4px;
         }
-        .contrib {
-          --cell: 12px;
-          --gap: 3px;
-          display: grid;
-          grid-template-rows: repeat(7, var(--cell));
-          grid-auto-flow: column;
-          grid-auto-columns: var(--cell);
-          gap: var(--gap);
-          min-width: max-content;
-          padding: 2px 0;
-        }
-        .contrib-footer {
+        .contrib-body {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 1rem;
-          margin-top: 0.85rem;
-          font-size: 11px;
+          gap: 6px;
+          width: max-content;
+        }
+        .contrib-daylabels {
+          display: grid;
+          grid-template-rows: repeat(7, 11px);
+          gap: 3px;
+          font-size: 9px;
           color: var(--fg-dim);
+          text-align: right;
+          margin-top: 18px;
         }
-        .legend {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
+        .contrib-daylabels span {
+          line-height: 11px;
         }
-        .legend :global(.legend-cell) {
-          width: 10px;
-          height: 10px;
+        .contrib-months {
+          display: grid;
+          gap: 3px;
+          font-size: 9.5px;
+          color: var(--fg-dim);
+          height: 15px;
+          margin-bottom: 3px;
         }
-        :global(.contrib__cell) {
-          border-radius: 2px;
-          background: var(--line);
-          display: block;
+        .contrib-months span {
+          white-space: nowrap;
+          overflow: visible;
         }
-        :global(.contrib__cell--pad) {
+        .contrib-grid {
+          display: grid;
+          grid-template-rows: repeat(7, 11px);
+          gap: 3px;
+        }
+        :global(.ccell) {
+          width: 11px;
+          height: 11px;
+          border-radius: 2.5px;
+          position: relative;
+        }
+        :global(.ccell--pad) {
           background: transparent;
         }
-        :global(.contrib__cell--1) {
-          background: rgba(63, 185, 80, 0.28);
+        /* GitHub dark palette */
+        :global(.ccell.lv0) {
+          background: rgba(255, 255, 255, 0.07);
         }
-        :global(.contrib__cell--2) {
-          background: rgba(63, 185, 80, 0.5);
+        :global(.ccell.lv1) {
+          background: #0e4429;
         }
-        :global(.contrib__cell--3) {
-          background: rgba(63, 185, 80, 0.75);
+        :global(.ccell.lv2) {
+          background: #006d32;
         }
-        :global(.contrib__cell--4) {
-          background: rgba(63, 185, 80, 0.98);
+        :global(.ccell.lv3) {
+          background: #26a641;
         }
-        :root[data-theme='light'] :global(.contrib__cell--1) {
-          background: rgba(26, 127, 55, 0.2);
+        :global(.ccell.lv4) {
+          background: #39d353;
         }
-        :root[data-theme='light'] :global(.contrib__cell--2) {
-          background: rgba(26, 127, 55, 0.42);
+        /* GitHub light palette */
+        :global([data-theme='light'] .ccell.lv0) {
+          background: #ebedf0;
         }
-        :root[data-theme='light'] :global(.contrib__cell--3) {
-          background: rgba(26, 127, 55, 0.68);
+        :global([data-theme='light'] .ccell.lv1) {
+          background: #9be9a8;
         }
-        :root[data-theme='light'] :global(.contrib__cell--4) {
-          background: rgba(26, 127, 55, 0.92);
+        :global([data-theme='light'] .ccell.lv2) {
+          background: #40c463;
         }
-        @media (max-width: 600px) {
-          .contrib {
-            --cell: 9px;
-            --gap: 2px;
-          }
+        :global([data-theme='light'] .ccell.lv3) {
+          background: #30a14e;
+        }
+        :global([data-theme='light'] .ccell.lv4) {
+          background: #216e39;
+        }
+        :global(.ccell[data-tip]:hover) {
+          outline: 1px solid var(--fg-dim);
+          outline-offset: 0;
+        }
+        :global(.ccell[data-tip]:hover::after) {
+          content: attr(data-tip);
+          position: absolute;
+          bottom: calc(100% + 7px);
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--bg-3);
+          border: 1px solid var(--line-strong);
+          color: var(--fg);
+          padding: 4px 9px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-family: var(--font-jetbrains), monospace;
+          white-space: nowrap;
+          z-index: 20;
+          pointer-events: none;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+        :global(.ccell--flip[data-tip]:hover::after) {
+          bottom: auto;
+          top: calc(100% + 7px);
+        }
+        .contrib-legend {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 4px;
+          font-size: 10px;
+          color: var(--fg-dim);
+          margin-top: 8px;
+        }
+        .contrib-legend :global(.ccell) {
+          display: inline-block;
+        }
+        .contrib-legend span:first-child {
+          margin-right: 3px;
+        }
+        .contrib-legend span:last-child {
+          margin-left: 3px;
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 }
 
