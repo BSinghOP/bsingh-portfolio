@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box, Trophy, BrainCog } from 'lucide-react';
 import {
@@ -87,8 +88,13 @@ function ProjectCard({
 
       <div className="proj-card__media">
         {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={imageAlt ?? title} className="proj-card__img" />
+          <Image
+            src={image}
+            alt={imageAlt ?? title}
+            fill
+            sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 340px"
+            className="proj-card__img"
+          />
         ) : (
           <div className="proj-card__placeholder mono" aria-hidden>
             <span>image soon</span>
@@ -235,14 +241,11 @@ function ProjectCard({
             ),
             var(--chip-glass);
         }
-        .proj-card__img {
-          width: 100%;
-          height: 100%;
+        .proj-card__media :global(.proj-card__img) {
           object-fit: cover;
-          display: block;
           transition: transform 0.4s ease;
         }
-        .proj-card:hover .proj-card__img {
+        .proj-card:hover :global(.proj-card__img) {
           transform: scale(1.04);
         }
         .proj-card__placeholder {

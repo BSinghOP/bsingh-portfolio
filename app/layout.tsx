@@ -35,8 +35,12 @@ export const metadata: Metadata = {
     description: 'Building things. Breaking servers. Figuring it out.',
     url: 'https://www.bsingh.dev',
     siteName: 'BSingh',
-    images: ['/logo.jpg'],
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "BSingh's Portfolio",
+    description: 'Building things. Breaking servers. Figuring it out.',
   },
 };
 
