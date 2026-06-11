@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, FileDown, ArrowUpRight } from 'lucide-react';
 import { hero, personal } from '@/lib/content';
+import { useSmoothAnchor } from '@/lib/useSmoothAnchor';
 
 function TypedLine({ text, delay = 0 }: { text: string; delay?: number }) {
   const [shown, setShown] = useState('');
@@ -33,6 +34,7 @@ function TypedLine({ text, delay = 0 }: { text: string; delay?: number }) {
 }
 
 export function Hero() {
+  const onAnchorClick = useSmoothAnchor();
   return (
     <section
       style={{
@@ -161,7 +163,7 @@ export function Hero() {
           flexWrap: 'wrap',
         }}
       >
-        <a href="#projects" className="btn btn-primary">
+        <a href="#projects" className="btn btn-primary" onClick={onAnchorClick}>
           see projects <ArrowUpRight size={15} />
         </a>
         <a href={personal.resume} className="btn" download>

@@ -2,13 +2,17 @@
 
 import { ThemeToggle } from './ThemeToggle';
 import { personal } from '@/lib/content';
+import { useSmoothAnchor } from '@/lib/useSmoothAnchor';
 
 export function Nav() {
+  const onAnchorClick = useSmoothAnchor();
+
   return (
     <header className="site-nav-wrap">
       <nav className="mono site-nav">
         <a
           href="#"
+          onClick={onAnchorClick}
           style={{
             fontWeight: 600,
             color: 'var(--fg)',
@@ -21,11 +25,11 @@ export function Nav() {
           <span style={{ color: 'var(--accent)' }}>]</span>
         </a>
         <div className="nav-links">
-          <a href="#about">about</a>
-          <a href="#projects">projects</a>
-          <a href="#skills">skills</a>
-          <a href="#achievements">wins</a>
-          <a href="#contact">contact</a>
+          <a href="#about" onClick={onAnchorClick}>about</a>
+          <a href="#projects" onClick={onAnchorClick}>projects</a>
+          <a href="#skills" onClick={onAnchorClick}>skills</a>
+          <a href="#achievements" onClick={onAnchorClick}>wins</a>
+          <a href="#contact" onClick={onAnchorClick}>contact</a>
         </div>
         <ThemeToggle />
 
