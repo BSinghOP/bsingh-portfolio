@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box, Trophy, BrainCog } from 'lucide-react';
+import { Github, ArrowUpRight, Settings, Wrench, Gamepad2, Package, Clock, Box, Trophy, BrainCog, ShieldCheck, Database } from 'lucide-react';
 import {
   SiOpenjdk,
   SiReact,
@@ -20,6 +20,7 @@ import {
   SiPython,
   SiDebian,
   SiPterodactyl,
+  SiOllama,
 } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 import { projects } from '@/lib/content';
@@ -50,6 +51,9 @@ const TAG_ICONS: Record<string, TagIcon> = {
   Game: { Icon: Gamepad2, color: '#A371F7' },
   Debian: { Icon: SiDebian, color: '#A81D33' },
   Pterodactyl: { Icon: SiPterodactyl, color: '#10539E' },
+  Ollama: { Icon: SiOllama, color: 'currentColor' },
+  RAG: { Icon: Database, color: '#56D364' },
+  Cybersecurity: { Icon: ShieldCheck, color: '#3FB950' },
 };
 const FALLBACK_TAG_ICON: TagIcon = { Icon: Package, color: '#8B949E' };
 

@@ -42,6 +42,15 @@ export const projects: {
   soon?: boolean;
 }[] = [
   {
+    title: 'Kronex — AI Security Copilot',
+    subtitle:
+      'Solo build. Local-first AI cybersecurity learning copilot that runs fully offline on Ollama — explains tool output, tutors concepts, and coaches you through authorized CTFs and labs. Node/Express + React, SQLite for progress, local RAG over a security knowledge base.',
+    tags: ['React', 'Node.js', 'Ollama', 'RAG', 'Cybersecurity'],
+    image: '/projects/kronex.jpg',
+    imageAlt: 'Kronex AI cybersecurity copilot console — mode selector and prompt',
+    repo: 'https://github.com/BSinghOP/Kronex',
+  },
+  {
     title: 'Minecraft Server Infrastructure',
     subtitle:
       'Production Minecraft network with 1000+ concurrent peak. Pterodactyl + Wings on Debian, load-balanced proxy fleet, Cloudflare Spectrum DDoS mitigation, custom Java plugin stack — in-game admin, plugin dev, and infra operator.',
