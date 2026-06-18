@@ -88,6 +88,8 @@ export function TechRadial() {
     return () => mq.removeEventListener('change', update);
   }, []);
   const still = isMobile || prefersReduced;
+  // Pull the orbits in on phones so the outer ring doesn't clip the edges.
+  const ringRadii = isMobile ? RADII.map((r) => Math.round(r * 0.78)) : RADII;
 
   return (
     <div className="tech-radial" aria-hidden>
@@ -98,7 +100,7 @@ export function TechRadial() {
             key={`orbit-${s.label}`}
             cx={0}
             cy={0}
-            r={RADII[ri]}
+            r={ringRadii[ri]}
             fill="none"
             stroke={s.color}
             strokeWidth={1}
@@ -115,7 +117,7 @@ export function TechRadial() {
       {/* One spinning rotor per orbit */}
       {SECTIONS.map((section, ri) => {
         const dir = ri % 2 === 0 ? 1 : -1;
-        const r = RADII[ri];
+        const r = ringRadii[ri];
         const period = PERIODS[ri];
         const n = section.items.length;
         const phase = ri * 16; // stagger so rings don't line up

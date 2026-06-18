@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { personal } from '@/lib/content';
 import { useSmoothAnchor } from '@/lib/useSmoothAnchor';
@@ -60,13 +62,33 @@ function useActiveSection() {
 export function Nav() {
   const onAnchorClick = useSmoothAnchor();
   const active = useActiveSection();
+  const [open, setOpen] = useState(false);
+
+  // Close the mobile menu if the viewport grows back to desktop.
+  useEffect(() => {
+    if (!open) return;
+    const mq = window.matchMedia('(min-width: 701px)');
+    const close = () => mq.matches && setOpen(false);
+    mq.addEventListener('change', close);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      mq.removeEventListener('change', close);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const handleLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    onAnchorClick(e);
+    setOpen(false);
+  };
 
   return (
     <header className="site-nav-wrap">
       <nav className="mono site-nav">
         <a
           href="#"
-          onClick={onAnchorClick}
+          onClick={handleLink}
           style={{
             fontWeight: 600,
             color: 'var(--fg)',
@@ -83,14 +105,48 @@ export function Nav() {
             <a
               key={s.id}
               href={`#${s.id}`}
-              onClick={onAnchorClick}
+              onClick={handleLink}
               className={active === s.id ? 'active' : undefined}
             >
               {s.label}
             </a>
           ))}
         </div>
-        <ThemeToggle />
+        <div className="nav-right">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="nav-burger"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              className="nav-mobile"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+            >
+              {SECTIONS.map((s) => (
+                <a
+                  key={s.id}
+                  href={`#${s.id}`}
+                  onClick={handleLink}
+                  className={active === s.id ? 'active' : undefined}
+                >
+                  {s.label}
+                </a>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <style jsx>{`
           .nav-links {
@@ -126,9 +182,30 @@ export function Nav() {
             opacity: 1;
             transform: scaleX(1);
           }
+          .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+          }
+          .nav-burger {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            border: 1px solid var(--line-strong);
+            background: var(--chip-glass);
+            color: var(--fg);
+            cursor: pointer;
+            padding: 0;
+          }
           @media (max-width: 700px) {
             .nav-links {
               display: none;
+            }
+            .nav-burger {
+              display: flex;
             }
           }
         `}</style>
