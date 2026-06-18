@@ -204,6 +204,8 @@ function ContributionGrid({ username }: { username: string }) {
           text-decoration: underline;
         }
         .contrib-scroll {
+          min-width: 0;
+          max-width: 100%;
           overflow-x: auto;
           overflow-y: hidden;
           scrollbar-width: thin;
