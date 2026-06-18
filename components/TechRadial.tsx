@@ -69,6 +69,9 @@ export const SECTIONS = [
 
 const FIG = 820;
 const RADII = [128, 205, 285, 368];
+// On phones the orbits are pushed outward + evenly spread so the inner ring
+// clears the core and icons aren't cramped together.
+const MOBILE_RADII = [142, 205, 268, 330];
 // Each orbit takes a different time and alternating direction for parallax.
 const PERIODS = [52, 68, 86, 104];
 
@@ -87,9 +90,8 @@ export function TechRadial() {
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
   }, []);
-  const still = isMobile || prefersReduced;
-  // Pull the orbits in on phones so the outer ring doesn't clip the edges.
-  const ringRadii = isMobile ? RADII.map((r) => Math.round(r * 0.78)) : RADII;
+  // Keep the orbits spinning on phones too — only a reduced-motion preference freezes it.
+  const ringRadii = isMobile ? MOBILE_RADII : RADII;
 
   return (
     <div className="tech-radial" aria-hidden>
@@ -127,8 +129,8 @@ export function TechRadial() {
           <motion.div
             key={`ring-${section.label}`}
             className="tech-radial__rotor"
-            animate={still ? {} : { rotate: dir * 360 }}
-            transition={still ? { duration: 0 } : spin}
+            animate={prefersReduced ? {} : { rotate: dir * 360 }}
+            transition={prefersReduced ? { duration: 0 } : spin}
           >
             {section.items.map((label, i) => {
               const def = TECH[label] ?? FALLBACK;
@@ -146,8 +148,8 @@ export function TechRadial() {
                   {/* counter-rotate so the icon + tip stay upright */}
                   <motion.div
                     className="tech-radial__counter"
-                    animate={still ? {} : { rotate: -dir * 360 }}
-                    transition={still ? { duration: 0 } : spin}
+                    animate={prefersReduced ? {} : { rotate: -dir * 360 }}
+                    transition={prefersReduced ? { duration: 0 } : spin}
                   >
                     <motion.div
                       className="tech-radial__node"

@@ -680,7 +680,7 @@ body {
 }
 @media (max-width: 700px) {
   .tech-radial {
-    max-width: 340px;
+    max-width: min(94vw, 380px);
   }
   .tech-radial__center {
     width: 56px;
