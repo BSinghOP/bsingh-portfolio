@@ -2,7 +2,7 @@
 
 import { Trophy, ArrowUpRight } from 'lucide-react';
 import { about, achievements, personal } from '@/lib/content';
-import { TechRadial } from '@/components/TechRadial';
+import { TechRadial, SECTIONS } from '@/components/TechRadial';
 
 const sectionStyle: React.CSSProperties = {
   position: 'relative',
@@ -47,6 +47,14 @@ export function Skills() {
       <h2 className="mono" style={h2Style}>
         What I work with.
       </h2>
+      <div className="tech-legend mono">
+        {SECTIONS.map((s) => (
+          <span key={s.label} className="tech-legend__item">
+            <span className="tech-legend__dot" style={{ background: s.color, color: s.color }} />
+            {s.label}
+          </span>
+        ))}
+      </div>
       <TechRadial />
     </section>
   );

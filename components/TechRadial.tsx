@@ -56,7 +56,7 @@ const FALLBACK: IconDef = { Icon: Lock, color: '#8B949E' };
 
 // Inner -> outer; fewer items orbit closer in, the dense infra ring sits outside
 // where there's more circumference to breathe.
-const SECTIONS = [
+export const SECTIONS = [
   { label: 'frontend', color: '#61DAFB', items: ['React', 'Next.js', 'Tailwind', 'HTML/CSS'] },
   { label: 'backend & db', color: '#5FA04E', items: ['Node.js', 'Express', 'MySQL', 'REST APIs'] },
   { label: 'languages', color: '#FCC624', items: ['C', 'C++', 'Python', 'Java', 'JavaScript'] },
@@ -121,10 +121,6 @@ export function TechRadial() {
         const phase = ri * 16; // stagger so rings don't line up
         const spin = { duration: period, repeat: Infinity, ease: 'linear' as const };
 
-        // ring category label rides the orbit at a distinct angle per ring
-        const labelDeg = -90 + ri * 90;
-        const labelRad = (labelDeg * Math.PI) / 180;
-
         return (
           <motion.div
             key={`ring-${section.label}`}
@@ -132,24 +128,6 @@ export function TechRadial() {
             animate={still ? {} : { rotate: dir * 360 }}
             transition={still ? { duration: 0 } : spin}
           >
-            {/* category label chip */}
-            <motion.div
-              className="tech-radial__section-label mono"
-              style={{
-                left: `calc(50% + ${pct(Math.cos(labelRad) * r)})`,
-                top: `calc(50% + ${pct(Math.sin(labelRad) * r)})`,
-                x: '-50%',
-                y: '-50%',
-                color: section.color,
-                borderColor: section.color + '88',
-                background: section.color + '14',
-              }}
-              animate={still ? {} : { rotate: -dir * 360 }}
-              transition={still ? { duration: 0 } : spin}
-            >
-              {section.label}
-            </motion.div>
-
             {section.items.map((label, i) => {
               const def = TECH[label] ?? FALLBACK;
               const Icon = def.Icon;
