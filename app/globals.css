@@ -528,6 +528,14 @@ body {
     0 0 28px var(--accent-soft),
     0 6px 18px rgba(0, 0, 0, 0.35);
 }
+.tech-radial__center-glow {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
 .tech-radial__section-label {
   position: absolute;
   padding: 5px 11px;
@@ -540,10 +548,16 @@ body {
   z-index: 2;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
-.tech-radial__node {
+.tech-radial__node-pos {
   position: absolute;
-  margin-left: -28px;
-  margin-top: -28px;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.tech-radial__counter {
+  transform-origin: 50% 50%;
+}
+.tech-radial__node {
+  position: relative;
   width: 56px;
   height: 56px;
   display: flex;
@@ -575,11 +589,9 @@ body {
 .tech-radial__node-tip {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(
-    calc(-50% + var(--tip-x, 0) * 44px),
-    calc(-50% + var(--tip-y, 0) * 44px)
-  );
+  bottom: 100%;
+  margin-bottom: 6px;
+  transform: translate(-50%, 4px);
   padding: 4px 10px;
   background: var(--bg);
   border: 1px solid var(--node-color, var(--accent));
@@ -596,10 +608,7 @@ body {
 }
 .tech-radial__node:hover .tech-radial__node-tip {
   opacity: 1;
-  transform: translate(
-    calc(-50% + var(--tip-x, 0) * 56px),
-    calc(-50% + var(--tip-y, 0) * 56px)
-  );
+  transform: translate(-50%, 0);
 }
 @media (max-width: 700px) {
   .tech-radial {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Globe, ShieldCheck, Lock } from 'lucide-react';
 import {
   SiC,
@@ -54,10 +54,12 @@ const TECH: Record<string, IconDef> = {
 };
 const FALLBACK: IconDef = { Icon: Lock, color: '#8B949E' };
 
+// Inner -> outer; fewer items orbit closer in, the dense infra ring sits outside
+// where there's more circumference to breathe.
 const SECTIONS = [
-  { label: 'languages', color: '#FCC624', items: ['C', 'C++', 'Python', 'Java', 'JavaScript'] },
   { label: 'frontend', color: '#61DAFB', items: ['React', 'Next.js', 'Tailwind', 'HTML/CSS'] },
   { label: 'backend & db', color: '#5FA04E', items: ['Node.js', 'Express', 'MySQL', 'REST APIs'] },
+  { label: 'languages', color: '#FCC624', items: ['C', 'C++', 'Python', 'Java', 'JavaScript'] },
   {
     label: 'infra & ops',
     color: '#F38020',
@@ -65,89 +67,19 @@ const SECTIONS = [
   },
 ];
 
-const FIG = 760;
-const R_ITEM = 270;
-const R_LABEL = 335;
-
-const DOT_DURATION = 0.55;
-const DOT_SPACING = 0.6;
-const PAUSE = 1.4;
-const INITIAL_DELAY = 1.4;
-
-type LaidOutItem = {
-  label: string;
-  x: number;
-  y: number;
-  color: string;
-  globalIdx: number;
-};
-type LaidOutSection = {
-  label: string;
-  color: string;
-  labelX: number;
-  labelY: number;
-};
-
-function layout(): { items: LaidOutItem[]; sections: LaidOutSection[] } {
-  const flat = SECTIONS.flatMap((s, sIdx) =>
-    s.items.map((label) => ({ label, sIdx, color: s.color }))
-  );
-  const n = flat.length;
-  const step = 360 / n;
-  const startAngle = -90;
-
-  const items: LaidOutItem[] = flat.map((it, i) => {
-    const angDeg = startAngle + i * step;
-    const angRad = (angDeg * Math.PI) / 180;
-    return {
-      label: it.label,
-      x: Math.cos(angRad) * R_ITEM,
-      y: Math.sin(angRad) * R_ITEM,
-      color: it.color,
-      globalIdx: i,
-    };
-  });
-
-  const sections: LaidOutSection[] = [];
-  let cursor = 0;
-  SECTIONS.forEach((section) => {
-    const count = section.items.length;
-    const startIdx = cursor;
-    const endIdx = cursor + count - 1;
-    const midDeg = startAngle + ((startIdx + endIdx) / 2) * step;
-    const midRad = (midDeg * Math.PI) / 180;
-    sections.push({
-      label: section.label,
-      color: section.color,
-      labelX: Math.cos(midRad) * R_LABEL,
-      labelY: Math.sin(midRad) * R_LABEL,
-    });
-    cursor += count;
-  });
-
-  return { items, sections };
-}
+const FIG = 820;
+const RADII = [128, 205, 285, 368];
+// Each orbit takes a different time and alternating direction for parallax.
+const PERIODS = [52, 68, 86, 104];
 
 const pct = (n: number) => `${(n / FIG) * 100}%`;
 
 export function TechRadial() {
-  const { items, sections } = layout();
   const half = FIG / 2;
   const viewBox = `-${half} -${half} ${FIG} ${FIG}`;
-  const totalCycle = items.length * DOT_SPACING + PAUSE;
 
-  // Mesh — only same-section edges
-  const meshEdges: { a: LaidOutItem; b: LaidOutItem }[] = [];
-  for (let i = 0; i < items.length; i++) {
-    for (let j = i + 1; j < items.length; j++) {
-      if (items[i].color === items[j].color) {
-        meshEdges.push({ a: items[i], b: items[j] });
-      }
-    }
-  }
-
-  const ROTATION_DURATION = 60;
   const [isMobile, setIsMobile] = useState(false);
+  const prefersReduced = useReducedMotion();
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 700px)');
     const update = () => setIsMobile(mq.matches);
@@ -155,167 +87,127 @@ export function TechRadial() {
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
   }, []);
+  const still = isMobile || prefersReduced;
 
   return (
     <div className="tech-radial" aria-hidden>
-      <motion.div
-        className="tech-radial__rotor"
-        animate={isMobile ? {} : { rotate: 360 }}
-        transition={
-          isMobile
-            ? { duration: 0 }
-            : { duration: ROTATION_DURATION, repeat: Infinity, ease: 'linear' }
-        }
-      >
+      {/* Static orbit guides */}
       <svg className="tech-radial__svg" viewBox={viewBox}>
-        {meshEdges.map((edge, i) => (
-          <motion.path
-            key={`mesh-${i}`}
-            d={`M ${edge.a.x} ${edge.a.y} L ${edge.b.x} ${edge.b.y}`}
+        {SECTIONS.map((s, ri) => (
+          <motion.circle
+            key={`orbit-${s.label}`}
+            cx={0}
+            cy={0}
+            r={RADII[ri]}
             fill="none"
-            stroke={edge.a.color}
+            stroke={s.color}
             strokeWidth={1}
-            strokeOpacity={0.45}
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
-          />
-        ))}
-
-        {items.map((it) => (
-          <motion.path
-            key={`spoke-${it.globalIdx}`}
-            d={`M0 0 L ${it.x} ${it.y}`}
-            fill="none"
-            stroke={it.color}
-            strokeWidth={1.6}
-            strokeOpacity={0.7}
+            strokeOpacity={0.22}
+            strokeDasharray="2 9"
             strokeLinecap="round"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ delay: 0.15 + it.globalIdx * 0.04, duration: 0.55, ease: 'easeOut' }}
-          />
-        ))}
-
-        {items.map((it, i) => (
-          <motion.circle
-            key={`pulse-${it.globalIdx}`}
-            r={4.5}
-            fill={it.color}
-            initial={{ cx: 0, cy: 0, opacity: 0 }}
-            animate={{
-              cx: [0, 0, it.x, it.x],
-              cy: [0, 0, it.y, it.y],
-              opacity: [0, 1, 1, 0],
-            }}
-            transition={{
-              duration: DOT_DURATION,
-              delay: INITIAL_DELAY + i * DOT_SPACING,
-              times: [0, 0.05, 0.92, 1],
-              repeat: Infinity,
-              repeatDelay: totalCycle - DOT_DURATION,
-              ease: 'easeOut',
-            }}
+            transition={{ delay: 0.2 + ri * 0.12, duration: 1, ease: 'easeOut' }}
           />
         ))}
       </svg>
 
-      {sections.map((s, sIdx) => (
-        <motion.div
-          key={`label-${s.label}`}
-          className="tech-radial__section-label mono"
-          style={{
-            left: `calc(50% + ${pct(s.labelX)})`,
-            top: `calc(50% + ${pct(s.labelY)})`,
-            x: '-50%',
-            y: '-50%',
-            color: s.color,
-            borderColor: s.color + '88',
-          }}
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={
-            isMobile
-              ? { opacity: 1, scale: 1 }
-              : { opacity: 1, scale: 1, rotate: -360 }
-          }
-          transition={{
-            opacity: {
-              delay: 0.05 + sIdx * 0.1,
-              type: 'spring',
-              stiffness: 240,
-              damping: 20,
-            },
-            scale: {
-              delay: 0.05 + sIdx * 0.1,
-              type: 'spring',
-              stiffness: 240,
-              damping: 20,
-            },
-            rotate: { duration: ROTATION_DURATION, repeat: Infinity, ease: 'linear' },
-          }}
-        >
-          {s.label}
-        </motion.div>
-      ))}
+      {/* One spinning rotor per orbit */}
+      {SECTIONS.map((section, ri) => {
+        const dir = ri % 2 === 0 ? 1 : -1;
+        const r = RADII[ri];
+        const period = PERIODS[ri];
+        const n = section.items.length;
+        const phase = ri * 16; // stagger so rings don't line up
+        const spin = { duration: period, repeat: Infinity, ease: 'linear' as const };
 
-      {items.map((it) => {
-        const def = TECH[it.label] ?? FALLBACK;
-        const Icon = def.Icon;
-        const outwardX = it.x / R_ITEM;
-        const outwardY = it.y / R_ITEM;
+        // ring category label rides the orbit at a distinct angle per ring
+        const labelDeg = -90 + ri * 90;
+        const labelRad = (labelDeg * Math.PI) / 180;
+
         return (
           <motion.div
-            key={`node-${it.label}`}
-            className="tech-radial__node"
-            style={
-              {
-                left: `calc(50% + ${pct(it.x)})`,
-                top: `calc(50% + ${pct(it.y)})`,
-                ['--node-color' as string]: def.color,
-                ['--tip-x' as string]: outwardX.toFixed(3),
-                ['--tip-y' as string]: outwardY.toFixed(3),
-              } as React.CSSProperties
-            }
-            initial={{ scale: 0, opacity: 0 }}
-            animate={
-              isMobile
-                ? { scale: 1, opacity: 1 }
-                : { scale: 1, opacity: 1, rotate: -360 }
-            }
-            whileHover={{
-              scale: 1.18,
-              transition: { type: 'spring', stiffness: 320, damping: 18 },
-            }}
-            transition={{
-              scale: {
-                delay: 0.4 + it.globalIdx * 0.04,
-                type: 'spring',
-                stiffness: 240,
-                damping: 18,
-              },
-              opacity: {
-                delay: 0.4 + it.globalIdx * 0.04,
-                type: 'spring',
-                stiffness: 240,
-                damping: 18,
-              },
-              rotate: { duration: ROTATION_DURATION, repeat: Infinity, ease: 'linear' },
-            }}
+            key={`ring-${section.label}`}
+            className="tech-radial__rotor"
+            animate={still ? {} : { rotate: dir * 360 }}
+            transition={still ? { duration: 0 } : spin}
           >
-            <Icon size={26} color={def.color} />
-            <span className="tech-radial__node-tip mono">{it.label}</span>
+            {/* category label chip */}
+            <motion.div
+              className="tech-radial__section-label mono"
+              style={{
+                left: `calc(50% + ${pct(Math.cos(labelRad) * r)})`,
+                top: `calc(50% + ${pct(Math.sin(labelRad) * r)})`,
+                x: '-50%',
+                y: '-50%',
+                color: section.color,
+                borderColor: section.color + '88',
+                background: section.color + '14',
+              }}
+              animate={still ? {} : { rotate: -dir * 360 }}
+              transition={still ? { duration: 0 } : spin}
+            >
+              {section.label}
+            </motion.div>
+
+            {section.items.map((label, i) => {
+              const def = TECH[label] ?? FALLBACK;
+              const Icon = def.Icon;
+              const angDeg = -90 + phase + (360 / n) * i;
+              const angRad = (angDeg * Math.PI) / 180;
+              const x = Math.cos(angRad) * r;
+              const y = Math.sin(angRad) * r;
+              return (
+                <div
+                  key={`node-${label}`}
+                  className="tech-radial__node-pos"
+                  style={{ left: `calc(50% + ${pct(x)})`, top: `calc(50% + ${pct(y)})` }}
+                >
+                  {/* counter-rotate so the icon + tip stay upright */}
+                  <motion.div
+                    className="tech-radial__counter"
+                    animate={still ? {} : { rotate: -dir * 360 }}
+                    transition={still ? { duration: 0 } : spin}
+                  >
+                    <motion.div
+                      className="tech-radial__node"
+                      style={{ ['--node-color' as string]: def.color }}
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      whileHover={{
+                        scale: 1.18,
+                        transition: { type: 'spring', stiffness: 320, damping: 18 },
+                      }}
+                      transition={{
+                        delay: 0.4 + ri * 0.1 + i * 0.05,
+                        type: 'spring',
+                        stiffness: 240,
+                        damping: 18,
+                      }}
+                    >
+                      <Icon size={26} color={def.color} />
+                      <span className="tech-radial__node-tip mono">{label}</span>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              );
+            })}
           </motion.div>
         );
       })}
-      </motion.div>
 
+      {/* Breathing core */}
       <motion.div
         className="tech-radial__center mono"
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 220, damping: 18 }}
       >
+        <motion.span
+          className="tech-radial__center-glow"
+          animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.12, 1] }}
+          transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
         My Stack
       </motion.div>
     </div>
