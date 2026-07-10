@@ -19,7 +19,7 @@ export const hero = {
 
 export const about = [
   'I am Bibekpreet Singh Chugh, a B.Tech CSE student at SRM Institute of Science and Technology, Delhi-NCR, currently entering my third year. Most of my time goes into personal full-stack projects — React on the front, Node and MySQL on the back, deployed on a Linux VPS behind Nginx and PM2.',
-  'On the side I have spent a few years operating Minecraft game servers — third-party hosting, dedicated machines, Cloudflare Spectrum for DDoS protection, peaks past 1000 concurrent players. That is where I learned what production traffic actually feels like.',
+  'On the side I spent time operating Minecraft game servers — third-party hosting, dedicated machines, Cloudflare Spectrum for DDoS protection, peaks past 1000 concurrent players. That is where I learned what production traffic actually feels like.',
   'I enjoy poking at things until they make sense. Comfortable enough in C, C++, Python, Java, JavaScript and React, plus the database, hosting and SSL side of getting projects live.',
 ];
 
@@ -53,7 +53,7 @@ export const projects: {
   {
     title: 'Minecraft Server Infrastructure',
     subtitle:
-      'Production Minecraft network with 1000+ concurrent peak. Pterodactyl + Wings on Debian, load-balanced proxy fleet, Cloudflare Spectrum DDoS mitigation, custom Java plugin stack. Former in-game admin, plugin dev, and infra operator (2023–2026).',
+      'Production Minecraft network with 1000+ concurrent peak. Pterodactyl + Wings on Debian, load-balanced proxy fleet, Cloudflare Spectrum DDoS mitigation, custom Java plugin stack. Former in-game admin, plugin dev, and infra operator (2025–2026).',
     tags: ['DevOps', 'Debian', 'Pterodactyl', 'Cloudflare', 'Java'],
     image: '/projects/battlepie.jpg',
     imageAlt: 'Battle Pie Minecraft network logo',
