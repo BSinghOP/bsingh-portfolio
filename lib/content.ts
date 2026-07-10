@@ -14,7 +14,7 @@ export const hero = {
   title: ['Building things.', 'Breaking servers.', 'Figuring it out.'],
   accentLine: 1,
   subtitle:
-    'CS undergrad at SRM Delhi-NCR. I build personal projects across the stack and run game-server infrastructure that has handled 1000+ concurrent players. Comfortable in code, calmer in front of a working deploy.',
+    'CS undergrad at SRM Delhi-NCR. I build personal projects across the stack and have run game-server infrastructure that handled 1000+ concurrent players. Comfortable in code, calmer in front of a working deploy.',
 };
 
 export const about = [
@@ -53,7 +53,7 @@ export const projects: {
   {
     title: 'Minecraft Server Infrastructure',
     subtitle:
-      'Production Minecraft network with 1000+ concurrent peak. Pterodactyl + Wings on Debian, load-balanced proxy fleet, Cloudflare Spectrum DDoS mitigation, custom Java plugin stack — in-game admin, plugin dev, and infra operator.',
+      'Production Minecraft network with 1000+ concurrent peak. Pterodactyl + Wings on Debian, load-balanced proxy fleet, Cloudflare Spectrum DDoS mitigation, custom Java plugin stack. Former in-game admin, plugin dev, and infra operator (2023–2026).',
     tags: ['DevOps', 'Debian', 'Pterodactyl', 'Cloudflare', 'Java'],
     image: '/projects/battlepie.jpg',
     imageAlt: 'Battle Pie Minecraft network logo',
